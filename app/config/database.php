@@ -55,7 +55,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'e_esige',
+			'database'  => 'learning',
 			'username'  => 'root',
 			'password'  => '',
 			'charset'   => 'utf8',

@@ -48,7 +48,7 @@ Route::filter('admin', function(){
 		else {/**/}
 	}
 	else {
-		return Redirect::route('auth.login');
+		return Redirect::route('login');
 	}
 });
 
@@ -62,7 +62,7 @@ Route::filter('secretaire', function(){
 		else {/**/}
 	}
 	else {
-		return Redirect::route('auth.login');
+		return Redirect::route('login');
 	}
 });
 
@@ -76,7 +76,7 @@ Route::filter('student', function(){
 		else {/**/}
 	}
 	else {
-		return Redirect::route('auth.login');
+		return Redirect::route('login');
 	}
 });
 
@@ -90,7 +90,7 @@ Route::filter('teacher', function(){
 		else {/**/}
 	}
 	else {
-		return Redirect::route('auth.login');
+		return Redirect::route('login');
 	}
 });
 

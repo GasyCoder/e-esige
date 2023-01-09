@@ -1,4 +1,4 @@
-@extends('layouts.login')
+@extends('layouts.default')
 @section('title') Se connecter @stop
 @section('content')
     <!-- Top Bar -->
@@ -24,10 +24,11 @@
                             <img src="">
                         </div>
                     </div>
+            @include('components.alerts')        
             {{ Form::open(['route'=>'auth.check', 'id'=>'', 'class'=>'card mt-5 p-5 md:p-10']) }}
                 <div class="mb-5">
                     <label class="label block mb-2" for="email">Email</label>
-                    <input id="email" name="email" type="text" class="form-control" placeholder="Saisir adresse e-mail">
+                    <input id="email" type="text" name="email" class="form-control" placeholder="Saisir adresse e-mail">
                     <div class="help-block with-errors"></div>
                     @if($errors->first('email'))
                     <span class="text-red-700">{{ $errors->first('email') }}</span>
@@ -36,7 +37,7 @@
                 <div class="mb-5">
                     <label class="label block mb-2" for="password">Mot de passe</label>
                     <label class="form-control-addon-within">
-                        <input id="password" type="password" class="form-control border-none" placeholder="Saisir mot de passe">
+                        <input id="password" type="password" name="password" class="form-control border-none" placeholder="Saisir mot de passe">
                         <span class="flex items-center ltr:pr-4 rtl:pl-4">
                             <button type="button"
                                 class="text-gray-300 dark:text-gray-700 la la-eye text-xl leading-none"

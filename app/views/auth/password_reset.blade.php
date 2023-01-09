@@ -1,4 +1,4 @@
-@extends('layouts.login')
+@extends('layouts.default')
 
 @section('title') Mot de passe oublié @stop
 
@@ -9,7 +9,7 @@
     <section class="top-bar">
 
         <!-- Brand -->
-        <span class="brand">Yeti</span>
+        <span class="text-xl">e-<span class="brand">ESIGE</span></span>
 
         <nav class="flex items-center ltr:ml-auto rtl:mr-auto">
 
@@ -31,9 +31,10 @@
 
     <div class="container flex items-center justify-center mt-20 py-10">
         <div class="w-full md:w-1/2 xl:w-1/3">
-            <div class="mx-5 md:mx-10">
-                <h2 class="uppercase">Forgot Password?</h2>
-                <h4 class="uppercase">We'll Email You Soon</h4>
+            <div class="flex items-center justify-center gap-x-4 mt-4">
+                <div class="avatar w-20 h-20">
+                    <img src="">
+                </div>
             </div>
             <form class="card mt-5 p-5 md:p-10">
                 <div class="mb-5">
