@@ -1,0 +1,78 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Enseignants <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?> 
+<!-- Workspace -->
+<main class="workspace">
+<section class="breadcrumb">        
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</section>
+        <div class="grid lg:grid-cols-3 gap-5">
+            <!-- Content -->
+            <div class="lg:col-span-2">
+            <?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>     
+            <div class="card p-5 mt-3">
+                    <h3> <small class="font-bold">Total:( <?php echo (count($teachers)); ?> )</small></h3>
+                    <table class="table-sorter table table_striped w-full mt-0">
+                        <thead>
+                            <tr>
+                                <th class="ltr:text-left rtl:text-right ">#</th>
+                                <th class="ltr:text-left rtl:text-right ">Nom</th>
+                                <th class="ltr:text-left rtl:text-right ">Prénom</th>
+                                <th class="ltr:text-left rtl:text-right ">Tél</th>
+                                <th class="ltr:text-left rtl:text-right ">Email</th>
+                                <th class="ltr:text-left rtl:text-right ">Sexe</th>
+                                <th class="center" style="text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($teachers as $teacher): ?> 
+                        <?php $user = Profil::where('token', $teacher->token)->first(); ?>   
+                            <tr>
+                                <td><?php echo $teacher->id; ?></td>
+                                <td class="font-bold"><?php echo $teacher->fname; ?></td>
+                                <td class="font-bold"><?php echo $teacher->lname; ?></td>
+                                <td class="font-bold"><?php echo $user->phone; ?></td>
+                                <td class="font-bold"><?php echo $user->email; ?></td>
+                                <td class="font-bold">
+                                <?php if($teacher->sexe == 1): ?>Homme <?php else: ?> Femme <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="<?php echo URL::route('profileTeacher', $teacher->token); ?>" class="btn btn-icon btn_success">
+                                        <span class="la la-user"></span>
+                                    </a>
+                                    <a href="<?php echo URL::current() . '?id=' . $teacher->id; ?>" class="btn btn-icon btn_primary ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a>
+                                    <?php endif; ?> <?php endif; ?>
+                                </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+           <a href="<?php echo URL::route('addteacher'); ?>">    
+            <div class="card card_hoverable card_list text-primary">
+                <div class="image image_icon">
+                    <span class="la la-user-plus la-4x"></span>
+                </div>
+                <div class="body">
+                    <h5>Ajouter enseignant</h5>
+                    <p>Créer un compte</p>
+                </div>
+            </div>
+           </a> 
+        </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>     
+<?php $__env->startSection('js'); ?>
+
+<?php $__env->stopSection(); ?>
+    </main>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

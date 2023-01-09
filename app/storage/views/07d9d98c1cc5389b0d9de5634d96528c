@@ -1,1 +1,71 @@
-<h1>Dashboard</h1>
+<?php 
+$path = Session::get('language'); 
+$control = Control::find(1); 
+?>
+<?php if(Auth::user()->is_admin): ?>
+  <?php $__env->startSection('title'); ?> Administrateur <?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php if(Auth::user()->is_student): ?>
+  <?php $__env->startSection('title'); ?> Page d'accueil - Etudiant <?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php if(Auth::user()->is_teacher): ?>
+  <?php $__env->startSection('title'); ?> Enseignant <?php $__env->stopSection(); ?>
+<?php endif; ?>  
+<?php if(Auth::user()->is_secretaire): ?>
+  <?php $__env->startSection('title'); ?>  Sécretaire <?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php $__env->startSection('content'); ?>
+
+<!--- MAIN ADMIN -->
+<?php if(Auth::user()->is_admin): ?>
+<?php if(!Auth::user()->is_secretaire): ?>
+<main class="workspace">
+        <section class="breadcrumb">
+            <h1>Tableau de bord</h1>
+            <ul>
+                <li><a href="#no-link">Accueil</a></li>
+                <li class="divider la la-arrow-right"></li>
+                <li>Tableau de bord</li>
+            </ul>
+        </section>
+        <div class="grid lg:grid-cols-2 gap-5">
+        <?php echo $__env->make('admin.dashboard.count', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php echo $__env->make('admin.dashboard.annonce', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php echo $__env->make('admin.dashboard.log', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+        <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>    
+    </main>
+<?php endif; ?>
+<?php endif; ?>
+<!--END ADMIN -->
+
+<!-- MAIN STUDENT -->
+<?php if(Auth::user()->is_student): ?>
+    <main class="workspace">
+        <section class="breadcrumb">
+            <h1>Espace d'étudiant</h1>
+            <ul>
+                <li><a href="#no-link">Accueil</a></li>
+                <li class="divider la la-arrow-right"></li>
+                <li>Menu</li>
+            </ul>
+        </section>
+        <div class="grid lg:grid-cols-1 gap-5">
+            <div class="alert alert_danger">
+                    <strong class="uppercase"><bdi>Danger!</bdi></strong>
+                    This is an alert message.
+                    <button class="dismiss la la-times" data-dismiss="alert"></button>
+            </div>
+            <?php echo $__env->make('student.index', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+            <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>         
+
+<?php $__env->startSection('js'); ?>
+<script src="<?php echo url(); ?>/public/assets/js/Sortable.min.js"></script>
+<?php $__env->stopSection(); ?>
+    </main>
+<?php endif; ?>
+ <!--END STUDENT -->
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -10,14 +10,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	use UserTrait, RemindableTrait;
 
 	protected $guarded = ['id', 'created_at'];
-
+	
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
 	protected $table = 'users';
-
+	public $incrementing = false;
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
@@ -26,28 +26,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
 
-	public function children()
-	{
-	    return $this->hasMany('User', 'guardian_id');
-	}
 
-	public function parent()
+	public function student()
 	{
-	    return $this->belongsTo('User', 'guardian_id');
+	    return $this->belongsTo('Student', 'token');
 	}
 
 
-	public function studClass()
-	{
-	    return $this->belongsTo('TheClass', 'class_id');
-	}
-
-
-	public function teacher()
+	/*public function teacher()
 	{
 	    return $this->belongsTo('TheTeacher', 'teacher_id');
-	}
-
+	}*/
 
 
 }

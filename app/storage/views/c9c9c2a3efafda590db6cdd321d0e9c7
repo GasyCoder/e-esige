@@ -23,6 +23,6 @@
     <?php echo $__env->yieldContent('content'); ?>
     <!-- Scripts -->
     <script src="<?php echo url(); ?>/public/assets/js/vendor.js"></script>
-    <script src="<?php echo url(); ?>/public/assets/js/script.js"></script>
+    <script src="<?php echo url(); ?>/public/assets/js/script.js"></script>    
 </body>
 </html>

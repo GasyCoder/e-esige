@@ -1,0 +1,128 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Matières - Ajouter Enseignant <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <main class="workspace">
+<section class="breadcrumb lg:flex items-start">   
+<div>   
+</div>
+</section>
+<a href="/admin/element_constitutif/<?php echo $class->id; ?>/<?php echo $parcour->id; ?>" class="btn btn-icon btn-icon_large btn_outlined btn_primary p-5">
+    <span class="la la-undo"></span>
+</a>
+<?php if(!empty($element->id_teacher)): ?>  
+ <section class="breadcrumb lg:flex items-start p-5">
+           <div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
+                <div class="flex gap-x-2">
+                <div class="avatar w-16 h-16 ltr:mr-5 rtl:ml-5">
+                <div class="status bg-success"></div>
+                <?php if(!empty($element->teacher->image)): ?>
+                <?php echo HTML::image('uploads/profiles/teacher/'.$element->teacher->image.'', '', ['class'=>'', 'width'=>'180','height'=>'80']) ?>
+                <?php elseif($element->teacher->sexe == 1): ?>
+                <?php echo HTML::image('public/assets/avatar/teacher_1.png', '', ['class'=>'', 'width'=>'','height'=>'']); ?>
+
+                 <?php else: ?> <?php echo HTML::image('public/assets/avatar/teacher_2.png', '', ['class'=>'', 'width'=>'','height'=>'50']); ?>
+
+                <?php endif; ?>
+                </div>
+                <div>
+                <h5><?php if($element->teacher->sexe == 1): ?> Mr. <?php else: ?> Mme. <?php endif; ?> <?php echo $element->teacher->fname; ?> <?php echo $element->teacher->lname; ?></h5>
+                <p>Enseignant <?php if($element->teacher->sexe == 2): ?> e <?php endif; ?> </p>
+                </div>
+                </div>
+            </div>             
+        </section>
+    <hr>
+     <?php endif; ?> 
+    <div class="container flex items-center justify-center mb-2 py-1">
+        <div class="card p-5 flex flex-col gap-y-2 w-full md:w-1/2 xl:w-1/4">
+            <div class="mx-2 md:mx-3">
+                <h3 class=""> <span class="la la-plus-circle"></span><?php echo $title; ?></h3>
+            </div>
+            <div id="resultajax2" class="center"></div>
+            <?php echo Form::open(['route'=>['ajouterTeacher', $element->id], 'class'=>'', 'id'=>'myForm2', 'data-toggle'=>'validator']); ?>    
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="matiere">Nom matière</label>
+                            <div class="custom-select matiere">
+                                <select class="form-control" disabled>
+                                <option><?php echo $element->name; ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="teacher">Enseignants</label>
+                            <div class="custom-select id_teacher">
+                                <select class="form-control" name="id_teacher" id="teacher">
+                                <?php if(!empty($element->id_teacher)): ?>
+                                <option value="<?php echo $element->id_teacher; ?>" disabled selected class="font-bold text-primary" style="color:red"><?php echo $element->teacher->grade; ?> <?php echo $element->teacher->fname; ?> <?php echo $element->teacher->lname; ?></option>
+                                <?php else: ?>
+                                <option disabled selected>--choisir enseignant--</option>
+                                <?php endif; ?>
+                                   <?php foreach($teachers as $teacher): ?>
+                                     <option value="<?php echo $teacher->id; ?>"><?php echo $teacher->grade; ?> <?php echo $teacher->fname; ?> <?php echo $teacher->lname; ?>
+
+                                     </option>
+                                   <?php endforeach; ?>
+                                </select>
+                                <div class="custom-select-icon la la-caret-down"></div>
+                            </div>
+                        </div>
+                        <div class="mt-10">
+                            <button class="btn btn_success"><span class="la la-plus text-xl"></span> Ajouter</button>
+                        </div>
+                      <?php echo Form::close(); ?>
+
+                <?php echo $__env->make('admin.pedagogie.EC.ajaxTeacher', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        </div>
+    </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('js'); ?>
+<script type="text/javascript">
+ $('#teacher').select2();
+</script>
+
+<script type="text/javascript">
+ var urlmenu = document.getElementById( 'select_element_name' );
+ urlmenu.onchange = function() {
+      window.open( this.options[ this.selectedIndex ].value, '_self');
+ };
+</script>
+
+<script type="text/javascript">
+ var urlmenu = document.getElementById( 'select_parcour_name' );
+ urlmenu.onchange = function() {
+      window.open( this.options[ this.selectedIndex ].value, '_self');
+ };
+</script>
+
+<?php $__env->stopSection(); ?>   
+</main>
+ <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Toggler - Mobile -->
+        <button class="sidebar-toggler la la-ellipsis-v" data-toggle="sidebar"></button>
+        <!-- Tags -->
+       <h2 class="p-5">Objets sélectionnés</h2>
+        <hr>
+         <div class="flex flex-col gap-y-5 p-5">
+            <a href="#" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Niveau
+                <span class="badge badge_success ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto"><?php echo $class->name; ?></span>
+            </a>
+            <a href="#" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Parcours
+                <span class="badge badge_success ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto"><?php echo $parcour->name; ?></span>
+            </a>
+             <a href="#" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Tronc commun
+                <span class="badge badge_danger ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+                   <?php if($element->tronc == 1): ?> Oui <?php else: ?> Non <?php endif; ?>
+                </span>
+            </a>
+
+        </div>
+    </aside>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

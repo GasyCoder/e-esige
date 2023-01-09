@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'e-esige.mg',
+	'url' => 'http://scolx.mg',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'Asia/Qatar',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -122,7 +122,10 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
-		
+		'Laracasts\Flash\FlashServiceProvider',
+		'SimpleSoftwareIO\QrCode\QrCodeServiceProvider',
+		'Barryvdh\DomPDF\ServiceProvider',
+
 
 	),
 
@@ -191,6 +194,8 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
 
+		'QrCode' 			=> 'SimpleSoftwareIO\QrCode\Facades\QrCode',
+		'PDF' 				=> 'Barryvdh\DomPDF\Facade',
 	),
 
 );

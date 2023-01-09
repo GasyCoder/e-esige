@@ -10,6 +10,20 @@
 | integrates HTTP Basic authentication for quick, simple checking.
 |
 */
+App::before(function($request)
+{
+	
+	if (Session::get('language')) {
+		$language = Session::get('language', 'fr'); 
+		App::setLocale($language);
+	} 
+
+	else {
+	  Session::put('language', 'fr');
+	}
+
+
+});
 
 Route::filter('auth', function() {
 	if (Auth::guest())
@@ -96,13 +110,13 @@ Route::filter('teacher', function(){
 
 
 // if site is Closed
-Route::filter('closed', function(){
+// Route::filter('closed', function(){
 
-	$control = Control::find(1);
-	if ($control->close_site == 1) {
-		return Redirect::route('auth.close');
-	} 
-});
+// 	$control = Control::find(1);
+// 	if ($control->close_site == 1) {
+// 		return Redirect::route('auth.close');
+// 	} 
+// });
 
 
 /*

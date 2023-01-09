@@ -1,0 +1,231 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Element Constitutifs <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?> 
+<!-- Workspace -->
+<main class="workspace">
+<section class="breadcrumb">       
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</section>
+<?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <!-- Actions -->
+        <div class="card p-4 flex flex-wrap gap-2">
+            <?php if($class->id == 1): ?>
+            <a href="/admin/element_constitutifs" class="btn btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-1 rtl:ml-1"></span>
+                Retour
+            </a>
+            <?php else: ?>
+            <a href="/admin/element_constitutifs/<?php echo $class->id; ?>" class="btn btn_outlined btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-1 rtl:ml-1"></span>
+                Retour
+            </a>
+
+            <?php endif; ?>
+             <div class="custom-select mt-0">
+                    <select name="select_parcour_name" id="select_parcour_name" onchange="goToNext(this)" class="form-control">
+                        <?php if(!empty($parcour->id)): ?>
+                        <option value="<?php echo $parcour->id; ?>" selected class="font-bold text-primary"><?php echo $parcour->name; ?></option>
+                        <?php else: ?>
+                        <option value="" selected disabled>--Autre parcours--</option>
+                        <?php endif; ?>
+                        <?php foreach($parcours as $select_parcour): ?>
+                          <option value="<?php echo $select_parcour->id; ?>"><?php echo $select_parcour->name; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="custom-select-icon la la-caret-down"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 ltr:ml-auto rtl:mr-auto">
+                 <button data-toggle="modal" data-target="#add" class="btn btn_success">
+                    <span class="la la-plus-circle text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                    Ajouter Matière
+                </button>
+                <span class="badge badge_outlined badge_warning text-gray-700 font-bold" style="color:#333">
+                       Parcours: <?php echo $parcour->abr; ?>
+
+                </span>
+                <span class="badge badge_outlined badge_primary font-bold">
+                        Niveau: <?php echo $class->short; ?>
+
+                </span>
+                <?php if(count($ec_s1)> 0): ?>
+                <a href="<?php echo URL::route('print_element', [$class->id, $parcour->id]); ?>" target="_blank" class="btn btn_secondary text-gray-700">
+                    <span class="la la-print text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                   Imprimer
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
+                    <!-- To UE -->
+                    <div class="card relative p-5 mt-5">
+                            <?php if($class->short == 'L1'): ?>
+                            <h3 class=""><span class="la la-check-square"></span>Semestre 1</h3>
+                            <?php elseif($class->short == 'L2'): ?>
+                            <h3 class=""><span class="la la-check-square"></span>Semestre 3</h3>
+                            <?php elseif($class->short == 'L3'): ?>
+                            <h3 class=""><span class="la la-check-square"></span>Semestre 5</h3>
+                            <?php elseif($class->short == 'M1'): ?>
+                            <h3 class=""><span class="la la-check-square"></span>Semestre 7</h3>
+                            <?php elseif($class->short == 'M2'): ?>
+                            <h3 class=""><span class="la la-check-square"></span>Semestre 9</h3>
+                            <?php endif; ?>
+                            <div class="accordion rounded-xl mt-0">
+                                <center>     
+                                <p class="text-sm" style="color:#1F2937"> <u class="font-bold">Total matières non tronc commun</u>: <?php echo $NoMixte; ?><?php if($class->id >= 2): ?> </p>
+                                <p class="text-sm" style="color:#1F2937"> <u class="font-bold">Total matières tronc commun</u>: <?php echo $matiereMixte; ?> <?php endif; ?> </p>
+                                </center>
+                                <div id="faqs-1-3" class="collapse open">
+                                <div class="p-5">
+                                <table class="table-sorter table table_bordered w-full mt-0">
+                                <thead>
+                                    <tr style="color:#3F3F46">
+                                        <th class="" width="140" style="text-align:center">Code</th>
+                                        <th class="ltr:text-left rtl:text-right" width="480">Matières (EC)</th>
+                                        <?php if($class->id >= 2): ?>
+                                        <th style="text-align:center" width="100">Tronc Com</th>
+                                        <?php endif; ?>
+                                        <th style="text-align:center" width="100">Coef</th>
+                                        <th style="text-align:center">Enseignant</th>
+                                        <th class="text-center" width="210" style="text-align:center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                 <?php foreach($ec_s1 as $key => $ec): ?>   
+                                    <tr>
+                                        <td class="font-bold text-primary" align="center" width=""><code><?php echo $ec->codeEc; ?></code></td>
+                                        <td class="font-bold text-primary"><?php echo $ec->name; ?></td>
+                                        <?php if($class->id >= 2): ?>
+                                        <td class="font-bold text-primary text-center" align="center" width="10">
+                                            <?php if($ec->tronc == 1): ?> <span class="badge badge_outlined badge_danger"> Oui </span> <?php else: ?> <span class="badge badge_outlined badge_primary"> Non </span> <?php endif; ?>
+                                        </td>
+                                        <?php endif; ?>
+                                        <td class="text-center">
+                                            <div class="badge badge_outlined badge_success font-bold"><?php echo $ec->coef; ?></div>
+                                        </td>
+                                        <td>
+                                          <?php if($ec->id_teacher > 0): ?> <?php if($ec->teacher->sexe == 1): ?> Mr. <?php else: ?> Mme. <?php endif; ?> <?php echo $ec->teacher->fname. ''.$ec->teacher->lname; ?> <?php else: ?> NULL <?php endif; ?>
+                                        </td>
+                                        <td>
+                                        <div class="text-center">
+                                            <a href="<?php echo URL::current().'/'.$ec->id.'/details-elements-constitutifs'; ?>" class="btn btn-icon btn_warning" style="color:#333;">
+                                                <span class="la la-info-circle text-xl"></span>
+                                            </a>
+                                            <a href="<?php echo URL::route('addTeacher_ec', [$ec->class_id, $ec->parcour_id, $ec->id]); ?>" class="btn btn-icon btn_primary ltr:ml-2 rtl:mr-2 font-bold">
+                                                <span class="la la-chalkboard-teacher text-xl"></span>
+                                            </a>
+                                            <?php if($ec->status == 1): ?>
+                                            <a href="<?php echo URL::route('edit_ec', [$ec->class_id, $ec->parcour_id.'/'.rtrim(strtr(base64_encode($ec->id), '+/', '-_'), '=')]); ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                                <span class="la la-pen-fancy"></span>
+                                            </a>
+                                            <?php else: ?>
+                                            <a href="<?php echo URL::route('edit_ec', [$ec->class_id, $ec->parcour_id.'/'.rtrim(strtr(base64_encode($ec->id), '+/', '-_'), '=')]); ?>" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                                <span class="la la-ban"></span>
+                                            </a>
+                                            <?php endif; ?>
+                                            <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                            <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('remove_ec', $ec->id); ?>" class="btn btn-icon  btn_danger ltr:ml-2 rtl:mr-2">
+                                                <span class="la la-trash-alt"></span>
+                                            </a><?php endif; ?> <?php endif; ?>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                 <div class="card relative p-5 mt-5">   
+                    <?php if($class->short == 'L1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 2</h3>
+                    <?php elseif($class->short == 'L2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 4</h3>
+                    <?php elseif($class->short == 'L3'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 6</h3>
+                    <?php elseif($class->short == 'M1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 8</h3>
+                    <?php elseif($class->short == 'M2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 10</h3>
+                    <?php endif; ?>
+                    <div class="rounded-xl mt-0">
+                        <div>
+                        <div class="p-5">
+                        <table class="table-sorter table table_bordered w-full mt-0">
+                        <thead>
+                            <tr style="color:#3F3F46">
+                                <th class="" width="140" style="text-align:center">Code</th>
+                                <th class="ltr:text-left rtl:text-right" width="480">Matières (EC)</th>
+                                <?php if($class->id >= 2): ?>
+                                <th style="text-align:center" width="100">Tronc Com</th>
+                                <?php endif; ?>
+                                <th style="text-align:center" width="100">Coef</th>
+                                <th style="text-align:center">Enseignant</th>
+                                <th class="text-center" width="210" style="text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($ec_s2 as $key => $ec2): ?>   
+                            <tr>
+                                <td class="font-bold text-primary" align="center" width=""><code><?php echo $ec2->codeEc; ?></code></td>
+                                <td class="font-bold text-primary"><?php echo $ec2->name; ?></td>
+                                <?php if($class->id >= 2): ?>
+                                <td class="font-bold text-primary text-center" align="center" width="">
+                                    <?php if($ec2->tronc == 1): ?> <span class="badge badge_outlined badge_danger"> Oui </span> <?php else: ?> <span class="badge badge_outlined badge_primary"> Non </span> <?php endif; ?>
+                                </td>
+                                <?php endif; ?>
+                                <td class="text-center">
+                                    <div class="badge badge_outlined badge_success font-bold"><?php echo $ec2->coef; ?></div>
+                                </td>
+                                <td>
+                                  <?php if($ec2->id_teacher > 0): ?> <?php if($ec2->teacher->sexe == 1): ?> Mr. <?php else: ?> Mme. <?php endif; ?> <?php echo $ec2->teacher->fname. ''.$ec2->teacher->lname; ?> <?php else: ?> NULL <?php endif; ?>
+                                </td>
+                                <td>
+                                <div class="text-center">
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($ec2->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="btn btn-icon btn_warning" style="color:#333;">
+                                        <span class="la la-info-circle text-xl"></span>
+                                    </a>
+                                    <a href="<?php echo URL::route('addTeacher_ec', [$ec2->class_id, $ec2->parcour_id.'/'.rtrim(strtr(base64_encode($ec2->id), '+/', '-_'), '=')]); ?>" class="btn btn-icon btn_primary ltr:ml-2 rtl:mr-2 font-bold">
+                                        <span class="la la-chalkboard-teacher text-xl"></span>
+                                    </a>
+                                    <?php if($ec2->status == 1): ?>
+                                    <a href="<?php echo URL::route('edit_ec', [$ec2->class_id, $ec2->parcour_id.'/'.rtrim(strtr(base64_encode($ec2->id), '+/', '-_'), '=')]); ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="<?php echo URL::route('edit_ec', [$ec2->class_id, $ec2->parcour_id.'/'.rtrim(strtr(base64_encode($ec2->id), '+/', '-_'), '=')]); ?>" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-ban"></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('remove_ec', $ec2->id); ?>" class="btn btn-icon  btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a><?php endif; ?> <?php endif; ?>
+                                </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+<?php $__env->startSection('js'); ?>
+<script type="text/javascript">
+ $('#parcour').select2();
+</script>
+<script type="text/javascript">
+function goToNext(c) {
+  if(c.value != '') {
+    window.location = '/admin/element_constitutif/<?php echo $class->id; ?>/'+c.value;
+  }
+}
+</script>
+<?php $__env->stopSection(); ?>      
+</main>
+<?php echo $__env->make('admin.pedagogie.EC.modalForm', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

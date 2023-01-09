@@ -1,0 +1,129 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> <?php echo $title. ' ' .$secretaire->fname. ' '.$secretaire->lname; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+<!-- Workspace -->
+    <main class="workspace">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb">
+            <h1><?php echo $title; ?></h1>
+            <ul>
+                <li><a href="#">Menu</a></li>
+                <li class="divider la la-arrow-right"></li>
+                <li><a href="<?php echo URL::route('secretaire_admin'); ?>">Sécretaire</a></li>
+                <li class="divider la la-arrow-right"></li>
+                <li>Modifier</li>
+            </ul>
+        </section>
+
+        <?php echo Form::open(['route'=>['updateSecretaire', $secretaire->token], 'files'=>'true', 'class'=>'', 'id'=>'myForm', 'data-toggle'=>'validator']); ?>
+
+        <div class="grid lg:grid-cols-4 gap-5">
+            <!-- Content -->
+            <div class="lg:col-span-2 xl:col-span-3">
+                <div class="card p-5 mt-3">
+                    <div class="flex flex-wrap flex-row -mx-4"> 
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="fname">Nom</label>
+                            <?php echo Form::text('fname', $secretaire->fname, ['id'=>'fname', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('fname')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('fname'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="lname">Prénom(s) <small>option</small></label>
+                            <?php echo Form::text('lname', $secretaire->lname, ['id'=>'lname', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('lname')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('lname'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="email">Email</label>
+                            <?php echo Form::email('email', $user->email, ['id'=>'email', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('email')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('email'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="phone">Télephone</label>
+                            <?php echo Form::text('phone', $user->phone, ['id'=>'phone', 'class'=>'form-control']); ?>
+
+                            <div class="help-block with-errors"></div>
+                                <?php if($errors->first('phone')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('phone'); ?></span>
+                                <?php endif; ?>
+                        </div>
+
+                </div>
+            </div>
+            </div>
+            <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-1">
+                <!-- Tags -->
+                <div class="card p-5 mt-0">
+                        <div class="flex flex-col gap-y-2 mb-2">
+                        <label class="label block mb-2" for="sexe">Sexe</label>   
+                        
+                        <label class="custom-radio">
+                        <?php if($user->sexe == 1): ?> 
+                            <?php echo Form::radio('sexe', 1, ['checked'=>'checked']); ?>
+
+                            <span></span>
+                            <span>Homme</span>
+                        <?php else: ?>
+                        <?php echo Form::radio('sexe', 1); ?>
+
+                            <span></span>
+                            <span>Homme</span>
+                        <?php endif; ?>    
+                        </label>
+
+                        <label class="custom-radio">
+                        <?php if($user->sexe == 2): ?> 
+                            <?php echo Form::radio('sexe', 2, ['checked'=>'checked']); ?>
+
+                            <span></span>
+                            <span>Femme</span>
+                        <?php else: ?>
+                        <?php echo Form::radio('sexe', 2); ?>
+
+                            <span></span>
+                            <span>Femme</span>
+                        <?php endif; ?>   
+                        </label>
+
+                        <div class="help-block with-errors"></div>
+                        <?php if($errors->first('sexe')): ?>
+                        <span class="text-red-700"><?php echo $errors->first('sexe'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <hr class="border-dashed mb-4 mt-2">
+                <!-- Publish -->
+                <div class="flex flex-col gap-y-5">
+                    <div class="flex flex-wrap gap-2">
+                        <button class="btn btn_success uppercase"><span class="la la-sync"></span> Mettre à jour</button>
+                    </div>
+                </div>
+               </div> 
+            </div>
+        </div>
+    <?php echo Form::close(); ?>
+
+
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php $__env->startSection('js'); ?>
+        <script type="text/javascript">
+        function goToNext(c) {
+        if(c.value != '') {
+            window.location = '<?php echo URL::current(); ?>/'+c.value;
+        }
+        }
+        </script>
+        <?php $__env->stopSection(); ?>
+</main>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -6,7 +6,7 @@ protected $layouts = 'layouts.master';
 
 	public function showWelcome()
 	{
-		$control = Control::find(1);
+		//$control = Control::find(1);
 		return View::make('auth.login');
 	}
 

@@ -1,0 +1,183 @@
+<?php 
+$path = Session::get('language'); 
+?>
+<?php echo $__env->make('components.timeAgo', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('title'); ?> <?php echo $title; ?> - <?php echo $element->name; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?> 
+<!-- Workspace -->
+<main class="workspace">
+<?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+         <div class="flex gap-x-2 mb-1">
+            <a href="/admin/element_constitutif/<?php echo $class->id; ?>/<?php echo $parcour->id; ?>" class="btn btn-icon btn-icon_large btn_outlined btn_primary">
+                <span class="la la-undo"></span>
+            </a>
+        </div>   
+        <?php if($element->id_teacher > 0): ?>
+        <section class="breadcrumb lg:flex items-start">
+           <div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
+                <div class="flex gap-x-2">
+                <div class="avatar w-16 h-16 ltr:mr-5 rtl:ml-5">
+                <div class="status bg-success"></div>
+                <?php if(!empty($teacher->image)): ?>
+                <?php echo HTML::image('uploads/profiles/teacher/'.$teacher->image.'', '', ['class'=>'', 'width'=>'180','height'=>'80']) ?>
+                <?php elseif($teacher->sexe == 1): ?>
+                <?php echo HTML::image('public/assets/avatar/teacher_1.png', '', ['class'=>'', 'width'=>'','height'=>'']); ?>
+
+                 <?php else: ?> <?php echo HTML::image('public/assets/avatar/teacher_2.png', '', ['class'=>'', 'width'=>'','height'=>'50']); ?>
+
+                <?php endif; ?>
+                </div>
+                <div>
+                <h5><?php if($teacher->sexe == 1): ?> Mr. <?php else: ?> Mme. <?php endif; ?> <?php echo $teacher->fname; ?> <?php echo $teacher->lname; ?></h5>
+                <p>Enseignant <?php if($teacher->sexe == 2): ?> e <?php endif; ?> </p>
+                </div>
+                </div>
+            </div>             
+        </section> 
+        <?php endif; ?>
+<!-- List -->
+        <div class="card p-5 mt-5">
+            <div class="overflow-x-auto">
+                <table class="table table-auto table_hoverable w-full">
+                    <thead>
+                        <tr style="color:#3F3F46">
+                            <th class="ltr:text-left rtl:text-right">Code </th>
+                            <th class="ltr:text-left rtl:text-right">Elements Constitutifs (EC)</th>
+                            <th class="" style="text-align:center">Volume H</th>
+                            <th class="" style="text-align:center">Coéf</th>
+                            <th class="" style="text-align:center">Abr</th>
+                            <?php if($class->id >= 2): ?>
+                            <th class="" style="text-align:center">Tronc</th>
+                            <?php endif; ?>
+                            <th class="" style="text-align:center">Niveau</th>
+                            <?php if($class->id >= 2): ?>
+                            <th class="" style="text-align:center">Parcours</th>
+                            <?php endif; ?>
+                            <th class="" style="text-align:center">Semestre</th>
+                            <th class="" style="text-align:center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	<?php foreach($matieres as $matiere): ?>
+                        <?php 
+                        $teacher = Teacher::where('id', $matiere->id_teacher)->first();
+                        ?>
+                        <tr>
+                            <td class="text-primary font-bold">
+                            <code><?php echo $matiere->codeEc; ?></code>
+                            </td>
+                            <td class="text-primary font-bold">
+                            <?php echo $matiere->name; ?>
+
+                            </td>
+                            <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->volH; ?></div></td>
+                            <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->coef; ?></div></td>
+                            <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->abr; ?></div>
+                            </td>
+                            <?php if($class->id >= 2): ?>
+                            <td class="font-bold text-primary text-center">
+                                <?php if($matiere->tronc == 1): ?> <span class="badge badge_outlined badge_danger"> Oui </span> <?php else: ?> <span class="badge badge_outlined badge_primary"> Non </span> <?php endif; ?>
+                            </td>
+                            <?php endif; ?>
+                             <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->niveau->short; ?></div>
+                            </td>
+                            <?php if($class->id >= 2): ?>
+                            <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->parcour->abr; ?></div>
+                            </td>
+                            <?php endif; ?>
+                            <td class="text-center"><div class="badge badge_success font-bold"><?php echo $matiere->semestre; ?></div>
+                            </td>
+                            <td class="whitespace-nowrap text-center">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="<?php echo URL::route('edit_ec', [$matiere->class_id, $matiere->parcour_id.'/'.rtrim(strtr(base64_encode($matiere->id), '+/', '-_'), '=')]); ?>" class="btn btn_outlined btn-icon btn_success">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('remove_ec', $matiere->id); ?>" class="btn btn_outlined btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a><?php endif; ?> <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+<?php $__env->startSection('js'); ?>
+<script type="text/javascript">
+ $('#parcour').select2();
+</script>
+<?php $__env->stopSection(); ?>      
+</main>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Toggler - Mobile -->
+        <button class="sidebar-toggler la la-ellipsis-v" data-toggle="sidebar"></button>
+        <!-- Status -->
+        <h3 class="p-5">Informations</h3>
+        <div class="flex flex-col gap-y-5 p-5">
+        <?php if(count($troncs_egale) >= 1): ?>   
+         <h4 class="p-0">Tronc commun différentes parcours</h4>
+         <?php foreach($troncs_egale as $egale): ?>
+            <div style="background-color:#F7FEE7">
+        <a href="" class="flex items-center text-normal">
+            <span class="la la-random text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+            Niveau : 
+            <span class="badge badge_info ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+            <?php echo $egale->niveau->short; ?>    
+            </span>
+        </a>
+        <a href="" class="flex items-center text-normal">
+            <span class="la la-random text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+            Parcours : 
+            <span class="badge badge_danger ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+            <?php echo $egale->parcour->abr; ?>  
+            </span>
+        </a>
+        </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if(count($troncs) > 0): ?>
+        <hr class="border-dashed">
+         <h4 class="p-0">Tronc commun autre niveaux et parcours</h4>
+         <?php foreach($troncs as $tronc): ?>
+         <div>
+         <a href="" class="flex items-center text-normal">
+            <span class="la la-random text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+            Niveau : 
+            <span class="badge badge_info ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+            <?php echo $tronc->niveau->name; ?>    
+            </span>
+         </a>
+         <a href="" class="flex items-center text-normal">
+            <span class="la la-random text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+            Parcours : 
+            <span class="badge badge_danger ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+            <?php echo $tronc->parcour->name; ?>    
+            </span>
+         </a>
+        </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
+        </div>
+        <hr class="border-dashed">
+        <h3 class="p-5">Unité d'enseignement</h3>
+        <hr class="border-dashed">
+        <div class="flex flex-col gap-y-5 p-5" style="background-color:#FEF2F2">
+             <h3 class="p-0 text-sm">       
+                <u class="uppercase"><?php echo $unite->name; ?></u>
+             </h3>
+            <a href="" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Code UE : 
+                <span class="badge badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">
+                <?php echo $element->codeUe; ?>   
+                </span>
+            </a>
+        </div>
+    </aside>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'scolarite@esige.mg', 'name' => 'E-ESIGE'),
+	'from' => array('address' => 'odettex@gmail.com', 'name' => 'ESIGE'),
 
 	/*
 	|--------------------------------------------------------------------------

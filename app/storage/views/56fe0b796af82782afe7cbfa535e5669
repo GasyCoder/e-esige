@@ -1,0 +1,384 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> UE-<?php echo $parcour->name; ?>-<?php echo $class->name; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>  
+    <!-- Workspace -->
+    <main class="workspace workspace_with-sidebar">
+        <!-- Breadcrumb -->
+<section class="breadcrumb lg:flex items-start">
+<div>
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div>
+</section>
+        <!-- Actions -->
+        <div class="breadcrumb breadcrumb_alt p-3 flex flex-wrap gap-2">
+            <?php if($class->id == 1): ?>
+            <a href="/admin/ue/unite_enseignements" class="btn btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-1 rtl:ml-1"></span>
+                Retour
+            </a>
+            <?php else: ?>
+            <a href="/admin/ue/unite_enseignements/<?php echo $class->id; ?>" class="btn btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-1 rtl:ml-1"></span>
+                Retour
+            </a>
+            <div class="custom-select mt-0">
+                      <select name="select_parcour_name" id="select_parcour_name" onchange="goToNext(this)" class="form-control">
+                        <?php if(!empty($parcour->id)): ?>
+                        <option value="<?php echo $parcour->id; ?>" selected class="font-bold text-primary"><?php echo $parcour->name; ?></option>
+                        <?php else: ?>
+                        <option value="" selected disabled>--Autre parcours--</option>
+                        <?php endif; ?>
+                        <?php foreach($parcours as $select_parcour): ?>
+                          <option value="<?php echo $select_parcour->id; ?>"><?php echo $select_parcour->name; ?></option>
+                        <?php endforeach; ?>
+                        </select>
+                    <div class="custom-select-icon la la-caret-down"></div>
+            </div>
+            <?php endif; ?>
+            <div class="flex flex-wrap gap-2 ltr:ml-auto rtl:mr-auto">
+
+            <?php if($class->id == 1): ?>    
+            <span class="badge badge_outlined badge_warning font-bold" style="color:#475569">
+                    Niveau: <?php echo $class->name; ?>
+
+            </span>
+            <button data-toggle="modal" data-target="#add" class="btn btn_success">
+                    <span class="la la-plus-circle text-xl leading-none ltr:mr-0 rtl:ml-0"></span>
+                    Ajouter nouveau UE
+            </button>
+            <?php if(count($ues)> 0): ?>
+             <a href="<?php echo URL::route('print_ue', [$class->id, $parcour->id]); ?>" target="_blank" class="btn btn_secondary">
+                    <span class="la la-print text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                    Mode Impression
+            </a>
+            <?php endif; ?>
+
+            <?php else: ?>
+             <span class="badge badge_outlined badge_warning text-gray-700 font-bold" style="color:#333">
+                   Parcour: <?php echo $parcour->abr; ?>
+
+            </span>
+            <span class="badge badge_outlined badge_primary font-bold">
+                    Niveau: <?php echo $class->short; ?>
+
+            </span>
+            <button data-toggle="modal" data-target="#add" class="btn btn_success">
+                    <span class="la la-plus-circle text-xl leading-none ltr:mr-0 rtl:ml-0"></span>
+                    Ajouter nouveau UE
+            </button>
+            <?php if(count($ues)> 0): ?>
+             <a href="<?php echo URL::route('print_ue', [$class->id, $parcour->id]); ?>" target="_blank" class="btn btn_secondary">
+                    <span class="la la-print text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                    Mode Impression
+            </a>
+            <?php endif; ?>
+
+            <?php endif; ?>
+            </div>
+        </div> 
+
+        <?php if($class->id == 1): ?>
+                    <div class="card relative p-5 mt-5">
+                    <div class="accordion rounded-xl mt-0">
+                        <h3 class="border-t border-divider p-2 active" data-toggle="collapse" data-target="#faqs-1-3">
+<span class="collapse-indicator la la-arrow-circle-down"></span>
+                        </h3>
+                        <div id="faqs-1-3" class="collapse open">
+                        <div class="p-2">
+                        <table class="table-sorter table table_bordered w-full mt-0">
+                        <thead>
+                            <tr style="color:#3F3F46">
+                                <th class="ltr:text-left rtl:text-right">Code UE</th>
+                                <th class="ltr:text-left rtl:text-right">Unités d'enseignement (UE)</th>
+                                <th class="ltr:text-left rtl:text-right">Matières (EC)</th>
+                                <th class="" style="text-align:center">Crédits</th>
+                                <th class="" style="text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($ueAp as $ap): ?>       
+                            <tr>
+                                <td><code class="font-bold"><?php echo $ap->codeUe; ?></code></td>
+                                <td class="font-bold text-primary"> 
+                               <?php echo $ap->name; ?>
+
+                                </td>
+                                <td class="font-bold">
+                                 <?php $elements = EC::where('codeUe', $ap->codeUe)
+                                                       ->where('parcour_id', $ap->parcour_id)
+                                                       ->where('class_id', $ap->class_id)
+                                                       ->orderBy('id', 'desc')->get();?>
+                                   <?php foreach($elements as $el): ?>
+                                   <?php if(count($elements) >= 1): ?> 
+                                   <?php if($el->tronc == 1): ?> 
+                                    <a href="/admin/element_constitutif/<?php echo $ap->class_id; ?>/<?php echo $ap->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_warning text-primary">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="/admin/element_constitutif/<?php echo $ap->class_id; ?>/<?php echo $ap->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_info">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php else: ?>
+                                    <span class="badge badge_secondary">Aucun element constitutif pour le moment</span>
+                                    <?php endif; ?>
+                                   <?php endforeach; ?>   
+                                </td>
+                                <td class="font-bold text-center">
+                                    <div class="badge badge_secondary font-bold"><?php echo $ap->credit; ?></div>
+                                </td>
+                                <td class="font-bold">
+                                    <div class="text-center">
+                                    <?php if($ap->status = 1): ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($ap->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($ap->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-ban"></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('remove_ec', $ap->id); ?>" class="btn btn-icon  btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a><?php endif; ?> <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- To UE -->
+            <div class="card relative p-5 mt-5">
+                    <?php if($class->short == 'L1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 1</h3>
+                    <?php elseif($class->short == 'L2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 3</h3>
+                    <?php elseif($class->short == 'L3'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 5</h3>
+                    <?php elseif($class->short == 'M1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 7</h3>
+                    <?php elseif($class->short == 'M2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 9</h3>
+                    <?php endif; ?>
+                    <div class="accordion rounded-xl mt-0">
+                        <h3 class="border-t border-divider p-2 active" data-toggle="collapse" data-target="#faqs-1-3">
+                        <span class="collapse-indicator la la-arrow-circle-down"></span>
+                        </h3>
+                        <div id="faqs-1-3" class="collapse open">
+                        <div class="p-2">
+                        <table class="table-sorter table table_bordered w-full mt-0">
+                        <thead>
+                            <tr style="color:#3F3F46">
+                                <th class="ltr:text-left rtl:text-right">Code UE</th>
+                                <th class="ltr:text-left rtl:text-right">Unités d'enseignement (UE)</th>
+                                <th class="ltr:text-left rtl:text-right">Matières (EC)</th>
+                                <th class="" style="text-align:center">Choix</th>
+                                <th class="" style="text-align:center">Tronc Commun</th>
+                                <th class="" style="text-align:center">Crédits</th>
+                                <th class="" style="text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         <?php foreach($ues as $ue): ?>       
+                            <tr>
+                                <td><code class="font-bold"><?php echo $ue->codeUe; ?></code></td>
+                                <td class="font-bold text-primary"> 
+                                <?php echo $ue->name; ?>
+
+                                </td>
+                                <td class="font-bold">
+                                <?php $elements = EC::where('codeUe', $ue->codeUe)
+                                                    ->where('parcour_id', $ue->parcour_id)
+                                                    ->where('class_id', $ue->class_id)
+                                                    ->orderBy('id', 'desc')->get();
+                                ?>
+                                <?php foreach($elements as $el): ?>
+                                   <?php if($el->tronc == 1): ?> 
+                                    <a href="/admin/element_constitutif/<?php echo $ue->class_id; ?>/<?php echo $ue->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_warning text-primary">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="/admin/element_constitutif/<?php echo $ue->class_id; ?>/<?php echo $ue->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_info">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>   
+                                </td>
+                                <?php if($ue->choix == 1): ?> 
+                                <td class="font-bold text-center">
+                                    <span class="badge badge_success font-bold">Obligatoire</span>
+                                </td>
+                                <?php else: ?>
+                                 <td class="font-bold text-center">
+                                    <span class="badge badge_danger font-bold">Facultatif</span> 
+                                </td>
+                                <?php endif; ?>
+                                <?php if($ue->tronc == 0): ?> 
+                                <td class="font-bold text-center">
+                                    <span class="badge badge_success font-bold">Non</span>
+                                </td>
+                                <?php else: ?>
+                                 <td class="font-bold text-center">
+                                    <span class="badge badge_danger font-bold">Oui</span> 
+                                </td>
+                                <?php endif; ?>
+                                <td class="font-bold text-center">
+                                    <div class="badge badge_secondary font-bold"><?php echo $ue->credit; ?></div>
+                                </td>
+                                <td class="font-bold">
+                                    <div class="text-center">
+                                    <?php if($ue->status = 1): ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($ue->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($ue->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-ban"></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('deleteUe', $ue->id); ?>" class="btn btn-icon  btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a><?php endif; ?> <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            
+            <div class="card relative p-5">
+                    <?php if($class->short == 'L1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 2</h3>
+                    <?php elseif($class->short == 'L2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 4</h3>
+                    <?php elseif($class->short == 'L3'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 6</h3>
+                    <?php elseif($class->short == 'M1'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 8</h3>
+                    <?php elseif($class->short == 'M2'): ?>
+                    <h3 class=""><span class="la la-check-square"></span>Semestre 10</h3>
+                    <?php endif; ?>
+                    <div class="rounded-xl mt-0">
+                        <div>
+                        <div class="p-2">
+                        <table class="table-sorter table table_bordered w-full mt-0">
+                        <thead>
+                            <tr style="color:#3F3F46">
+                                <th class="ltr:text-left rtl:text-right">Code</th>
+                                <th class="ltr:text-left rtl:text-right">Unité d'enseignements (UE)</th>
+                                <th class="ltr:text-left rtl:text-right">Matières (EC)</th>
+                                <th class="" style="text-align:center">Choix</th>
+                                <th class="" style="text-align:center">Tronc Commun</th>
+                                <th class="" style="text-align:center">Crédits</th>
+                                <th class="" style="text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         <?php foreach($ues2 as $s_2): ?>        
+                            <tr>
+                                <td><code class="font-bold"><?php echo $s_2->codeUe; ?></code></td>
+                                <td class="font-bold text-primary"> <?php echo $s_2->name; ?></td>
+                                <td class="font-bold">
+                                    <?php $elements = EC::where('codeUe', $s_2->codeUe)
+                                                       ->where('parcour_id', $s_2->parcour_id)
+                                                       ->where('class_id', $s_2->class_id)
+                                                       ->orderBy('id', 'desc')->get();
+                                    ?>
+                                <?php foreach($elements as $el): ?>
+                                   <?php if($el->tronc == 1): ?> 
+                                    <a href="/admin/element_constitutif/<?php echo $s_2->class_id; ?>/<?php echo $s_2->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_warning text-primary">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="/admin/element_constitutif/<?php echo $s_2->class_id; ?>/<?php echo $s_2->parcour_id; ?><?php echo '/'.rtrim(strtr(base64_encode($el->codeEc), '+/', '-_'), '=').'/details-elements-constitutifs'; ?>" class="badge badge_info">
+                                        <?php echo $el->name; ?>
+
+                                    </a>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>   
+                                </td>
+
+                                 <?php if($s_2->choix == 1): ?> 
+                                <td class="font-bold text-center">
+                                    <span class="badge badge_success font-bold">Obligatoire</span>
+                                </td>
+                                <?php else: ?>
+                                 <td class="font-bold text-center">
+                                    <span class="badge badge_danger font-bold">Facultatif</span> 
+                                </td>
+                                <?php endif; ?>
+                                <?php if($s_2->tronc == 0): ?> 
+                                <td class="font-bold text-center">
+                                    <span class="badge badge_success font-bold">Non</span>
+                                </td>
+                                <?php else: ?>
+                                 <td class="font-bold text-center">
+                                    <span class="badge badge_danger font-bold">Oui</span> 
+                                </td>
+                                <?php endif; ?>
+                                <td class="font-bold text-center">
+                                    <div class="badge badge_secondary font-bold"><?php echo $s_2->credit; ?></div>
+                                </td>
+
+                                <td class="font-bold">
+                                    <div class="text-center">
+                                    <?php if($s_2->status = 1): ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($s_2->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="<?php echo URL::current().'/'.rtrim(strtr(base64_encode($s_2->id), '+/', '-_'), '=').'/edit'; ?>" class="btn btn-icon btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-ban"></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('deleteUe', $s_2->id); ?>" class="btn btn-icon  btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a><?php endif; ?> <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+        <?php endif; ?>
+        </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('js'); ?>
+<script type="text/javascript">
+ $('#parcour').select2();
+</script>
+<script type="text/javascript">
+function goToNext(c) {
+  if(c.value != '') {
+    window.location = '/admin/ue/<?php echo $class->id; ?>/'+c.value;
+  }
+}
+</script>
+<?php $__env->stopSection(); ?>        
+</main>
+<?php echo $__env->make('admin.pedagogie.UE.formAdd', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

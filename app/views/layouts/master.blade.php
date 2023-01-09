@@ -1,4 +1,7 @@
-<?php /*$control = Setting::find(1);*/?>
+<?php 
+$path = Session::get('language');
+$control = Control::find(1);
+?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr">
 <head>
@@ -17,31 +20,45 @@
     <link rel="apple-touch-icon" href="assets/images/favicon/favicon-167.png" sizes="167x167">
     <link rel="apple-touch-icon" href="assets/images/favicon/favicon-180.png" sizes="180x180">
     {{HTML::style('public/assets/css/style.css')}}
+    {{ HTML::style('public/assets/css/datatable.css') }}
+    
+    {{ HTML::style('public/assets/js/Manage/vendor/select2/dist/css/select2.min.css') }}
+    {{ HTML::style('public/assets/js/Manage/css/argon.css?v=1.2.0') }}
+
+    {{ HTML::script('public/assets/js/other/jquery-3.6.0.js') }}
+    {{ HTML::script('public/assets/js/other/jquery-ui.js') }}
+
     @yield('css')
 </head>
 <body>
-    <main class="workspace">
-        
-        
-        @yield('content')
-        
-        <!-- Footer -->
-        <footer class="mt-auto">
-            <div class="footer">
-                <span class="">Created by <a href="https://gasycoder.com/" target="_blank">Gasy Coder</a> with ❤️</span>
-                <nav>
-                    <a href="#">FAQ</a>
-                    <span class="divider">|</span>
-                    <a href="mailto:GasyCoder<hello@gasycoder.com>?subject=Contact-App-E-ESIGE" target="_blank" rel="noreferrer">Contact</a>
-                </nav>
-            </div>
-        </footer>
 
-    </main>
+@if(Auth::user()->is_admin)
+@if(!Auth::user()->is_secretaire) 
+    @include('components.pages.header')
+    @include('components.pages.menubar')
+    @include('components.pages.customize')
+@endif
+@endif
+
+@if(Auth::user()->is_student) 
+    @include('components.stds.header')
+    @include('components.stds.menubar')
+@endif
+
+    @yield('content')
+
+
     <!-- Scripts -->
     <script src="{{url()}}/public/assets/js/vendor.js"></script>
     <script src="{{url()}}/public/assets/js/chart.min.js"></script>
     <script src="{{url()}}/public/assets/js/script.js"></script>
+    
+    <!--DATATABLE -->
+    <script src="{{ url() }}/public/assets/script/datatable.js"></script><!--sort table class-->
+    <script src="{{ url() }}/public/assets/script/demo.js"></script><!--function table-->
+
+    <script src="{{ url() }}/public/assets/js/Manage/vendor/select2/dist/js/select2.min.js"></script>
+    <script src="{{ url() }}/public/assets/js/Manage/js/argon.js?v=1.2.0"></script>
     @yield('js')
 </body>
 </html>

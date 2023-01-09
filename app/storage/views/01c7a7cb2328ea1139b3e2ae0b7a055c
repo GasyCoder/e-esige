@@ -1,0 +1,163 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Parcours <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?> 
+<!-- Workspace -->
+<main class="workspace">
+<section class="breadcrumb">        
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</section>
+        <div class="grid lg:grid-cols-3 gap-5">
+            <!-- Content -->
+            <div class="lg:col-span-2">
+            <div class="card p-5">
+                    <h3> <small class="font-bold">Total:( <?php echo (count($parcours)); ?> )</small></h3>
+                    <table class="table-sorter table table_striped w-full mt-3">
+                        <thead>
+                            <tr>
+                                <th class="ltr:text-left rtl:text-right ">#</th>
+                                <th class="ltr:text-left rtl:text-right ">Intitulé</th>
+                                <th class="ltr:text-left rtl:text-right ">Abréviation</th>
+                                <th class="ltr:text-left rtl:text-right ">Niveaux</th>
+                                <th class="ltr:text-left rtl:text-right ">Activer</th>
+                                <th class="ltr:text-left rtl:text-right ">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($parcours as $parcour): ?>    
+                            <tr>
+                                <td><?php echo $parcour->id; ?></td>
+                                <td class="font-bold"><?php echo $parcour->name; ?></td>
+                                <td class="font-bold"><?php echo $parcour->abr; ?></td>
+                                <td class="font-bold"><?php echo $parcour->niveau->short; ?></td>
+                                <td>
+                                <?php if($parcour->status == 1): ?><div class="badge badge_outlined badge_success">Oui</div> <?php else: ?> <div class="badge badge_outlined badge_danger">Non</div> <?php endif; ?>
+                                </td>
+                                <td>
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="<?php echo URL::current() . '?id=' . $parcour->id; ?>" class="btn btn-icon btn_outlined btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-pen-fancy"></span>
+                                    </a>
+                                    <?php if(Auth::user()->is_admin): ?> <?php if(!Auth::user()->is_secretaire): ?>
+                                    <a onclick="return confirm('<?php echo Lang::get($path.'.delete'); ?>')" href="<?php echo URL::route('deleteP', $parcour->id); ?>" class="btn btn-icon btn_outlined btn_danger ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-trash-alt"></span>
+                                    </a>
+                                    <?php endif; ?> <?php endif; ?>
+                                </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+<?php 
+if (isset($_GET['id'])) { 
+  
+$id = htmlspecialchars($_GET['id']);
+
+$getparcour = Parcour::find($id);
+
+if ($getparcour !== null) {  ?>
+
+            <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-1">
+                <!-- Publish -->
+                <div class="card p-5 flex flex-col gap-y-5">
+                    <h3>Modifier Parcour</h3>
+                  <div id="resultajax2" class="center"></div>    
+                   <?php echo Form::open(['route'=>['updateParcour',$getparcour->id], 'class'=>'', 'id'=>'myForm2', 'data-toggle'=>'validator']); ?>    
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="title">Intitulé</label>
+                            <input id="name" name="name" value="<?php echo $getparcour->name; ?>" type="text" class="form-control">
+                        </div>
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="content">Abréviation</label>
+                           <input id="abr" name="abr" value="<?php echo $getparcour->abr; ?>" type="text" class="form-control">
+                        </div>
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="category">Niveaux</label>
+                            <div class="custom-select">
+                            <select class="form-control" name="class_id">
+                                <?php if($getparcour->class_id > 0): ?>
+                                <option value="<?php echo $getparcour->class_id; ?>" selected text-red-700 font-bold><?php echo $getparcour->niveau->name; ?></option>
+                                <?php else: ?> 
+                                <option value="">--Choisir parcours</option>
+                                <?php endif; ?>
+                                <?php foreach($classes as $class): ?>
+                                <option value="<?php echo $class->id; ?>"><?php echo $class->name; ?></option>
+                                <?php endforeach; ?>
+                                <div class="custom-select-icon la la-caret-down"></div>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-1/2">
+                                <label class="label block">Status</label>
+                            </div>
+                            <div class="w-3/4 ml-2">
+                                <label class="label switch">
+                                    <?php if($getparcour->status == 1): ?>
+                                    <input type="checkbox" name="status" checked value="1">
+                                    <span></span>
+                                    <span>Activer</span>
+                                    <?php else: ?>
+                                    <input type="checkbox" name="status" value="0">
+                                    <span></span>
+                                    <span>Activer</span>
+                                    <?php endif; ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-10">
+                            <button class="btn btn_primary uppercase">Metre à jour</button>
+                        </div>
+                      <?php echo Form::close(); ?>
+
+                <?php echo $__env->make('admin.parcours.jsUp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                </div>
+            </div>
+<?php } } else { ?>
+
+            <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-1">
+                <!-- Publish -->
+                <div class="card p-5 flex flex-col gap-y-5">
+                    <h3>Ajouter Parcours</h3>
+                    <div id="resultajax" class="center"></div>
+                    <?php echo Form::open(['route'=>'storeParcour', 'class'=>'', 'id'=>'myForm', 'data-toggle'=>'validator']); ?> 
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="title">Intitulé</label>
+                            <input id="name" name="name" type="text" class="form-control">
+                        </div>
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="content">Abréviation</label>
+                           <input id="abr" name="abr" type="text" class="form-control">
+                        </div>
+                        <div class="mb-5">
+                            <label class="label block mb-2" for="category">Niveaux</label>
+                            <div class="custom-select">
+                                <select class="form-control" name="class_id">
+                                    <option selected disabled>Choisir</option>
+                                    <?php foreach($classes as $class): ?>
+                                       <option value="<?php echo $class->id; ?>"><?php echo $class->short; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="custom-select-icon la la-caret-down"></div>
+                            </div>
+                        </div>
+                        <div class="mt-10">
+                            <button type="submit" class="btn btn_primary uppercase">Ajouter</button>
+                        </div>
+                <?php echo Form::close(); ?>
+
+                <?php echo $__env->make('admin.parcours.jsAdd', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                </div>
+            </div>
+<?php }  ?>   
+        </div>
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>     
+
+<?php $__env->startSection('js'); ?>
+
+<?php $__env->stopSection(); ?>
+    </main>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,64 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Element Constitutifs <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <main class="workspace">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb lg:flex items-start">
+            <div>
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            </div>
+        </section>
+<?php if(count($classes) >= 1): ?>
+         <!-- List -->
+        <div class="card p-5">
+            <div class="overflow-x-auto">
+                <table class="table table-auto table_hoverable w-full">
+                    <thead>
+                        <tr class="" style="color:#3F3F46">
+                            <th class="ltr:text-left rtl:text-right">Listes des classes</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <tr>
+                            <td class="font-bold">
+                                <a href="/admin/element_constitutif/1/1">
+                                <span class="la la-user-graduate text-xl"></span> Année Préparatoire
+                                </a>
+                            </td>
+                            <td class="text-center font-bold">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="/admin/element_constitutif/1/1" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-eye"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php foreach($classes as $class): ?>
+                        <?php if($class->id >= 2): ?>
+                        <tr>
+                            <td class="font-bold">
+                             <a href="<?php echo URL::current().'/'.$class->id; ?>">   
+                                <span class="la la-user-graduate text-xl"></span><?php echo $class->name; ?>
+
+                             </a>   
+                            </td>
+                            <td class="text-center font-bold">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="<?php echo URL::current().'/'.$class->id; ?>" class="btn btn-icon btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
+                                        <span class="la la-eye"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div> 
+    <?php endif; ?>       
+<?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</main>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -22,6 +22,6 @@
     @yield('content')
     <!-- Scripts -->
     <script src="{{url()}}/public/assets/js/vendor.js"></script>
-    <script src="{{url()}}/public/assets/js/script.js"></script>
+    <script src="{{url()}}/public/assets/js/script.js"></script>    
 </body>
 </html>

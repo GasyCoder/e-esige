@@ -1,0 +1,93 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> Unité d'Enseignements <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+<main class="workspace">
+        <section class="breadcrumb lg:flex items-start">
+            <div>
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            </div>
+        </section>     
+         <div class="breadcrumb breadcrumb_alt p-3 flex flex-wrap gap-2 mt-2">  
+            <a href="<?php echo URL::route('indexUe'); ?>" class="btn btn_outlined btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-1 rtl:ml-1"></span>
+                Retour
+            </a>
+            <div class="flex flex-wrap gap-2 ltr:ml-auto rtl:mr-auto"> 
+                <a href="<?php echo URL::route('UEtroncCommun', $class->id); ?>" class="badge badge_primary badge_success font-bold"><span class="la la-plus-square text-2xl leading-none ltr:mr-2 rtl:ml-2"></span> Ajouter UE tronc communs</a> 
+            </div>
+        </div>
+<?php if(count($parcours)>0): ?>
+        <!-- List -->
+        <div class="card p-5">
+            <div class="overflow-x-auto">
+                <table class="table table-auto table_hoverable w-full">
+                    <thead>
+                        <tr style="color:#3F3F46">
+                           <th class="ltr:text-left rtl:text-right ">ID</th>
+                            <th class="ltr:text-left rtl:text-right ">Liste des Parcours</th>
+                            <th class="" style="text-align:center">Total UE</th>             
+                            <th class="text-center" style="text-align:center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($parcours as $key => $parcour): ?>
+                        <tr style="color:#3F3F46">
+                           <td><?php echo $parcour->id; ?></td>
+                           <td class="font-bold text-primary"><a href="<?php echo URL::route('detailsUe', [$class->id, $parcour->id]); ?>"><?php echo $parcour->name; ?></a></td>
+                           <td class="text-center">
+                            <?php $ues  = UE::where('tronc', 0)->where('status', 1)->where('class_id', $class->id)->where('parcour_id', $parcour->id)->get();?>
+                               <?php if(count($ues) > 0): ?>
+                               <span class="badge badge_primary"><?php echo count($ues); ?></span>
+                               <?php else: ?>
+                               <span class="badge badge_outlined badge_secondary"> 0 
+                               <?php endif; ?>
+                           </td>
+                            <td class="text-center">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                <a href="<?php echo URL::route('detailsUe', [$class->id, $parcour->id]); ?>" class="badge badge_success ltr:ml-2 rtl:mr-2">
+                                  <span class="la la-plus-circle"></span> Ajouter
+                                </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php else: ?>
+    <div class="alert alert_danger">
+        <strong class="uppercase"><bdi>Désolé!</bdi></strong>
+         Il n'y a pas des UE sur cette classe  
+        <button type="button" class="dismiss la la-times" data-dismiss="alert"></button>
+    </div>
+    <?php endif; ?>       
+    <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->startSection('js'); ?>
+<script type="text/javascript">
+ $('#parcour').select2();
+</script>
+<?php $__env->stopSection(); ?> 
+</main>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Toggler - Mobile -->
+        <button class="sidebar-toggler la la-ellipsis-v" data-toggle="sidebar"></button>
+        <!-- Status -->
+        <h2 class="p-5">Informations</h2>
+        <hr>
+        <div class="flex flex-col gap-y-5 p-5">
+            <a href="#" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Niveau
+                <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto"><?php echo $class->name; ?></span>
+            </a>
+            <a href="#" class="flex items-center text-normal">
+                <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Total parcours
+                <span class="badge badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto"><?php echo count($parcours); ?></span>
+            </a>
+        </div>
+    </aside>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
