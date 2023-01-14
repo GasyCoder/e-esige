@@ -1,25 +1,29 @@
-## Laravel PHP Framework
+# Présentation
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+<p>SCOLX est une application web permettant de gérer et contrôler la gestion de l’université ESIGE
+de manière numérique. Cette application a été développé à partir du framework Laravel qui est le
+framework php le plus avancé dans le domaine de développement d’application web et le plus
+répandu ayant une vaste communauté. Cette application est responsive c’est à dire que le site web
+est accessible et adaptable automatiquement à tous les appareils : ordinateurs, tablettes,
+smartphones.</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, and caching.
+<p>L’accès à l’application se fait par authentification et chaque type d’utilisateurs possède une espace
+qui lui est dédié avec des fonctionnalités et des droits d’accès différents.</p>
 
-Laravel aims to make the development process a pleasing one for the developer without sacrificing application functionality. Happy developers make the best code. To this end, we've attempted to combine the very best of what we have seen in other web frameworks, including frameworks implemented in other languages, such as Ruby on Rails, ASP.NET MVC, and Sinatra.
+# On a 02 types d’utilisateurs :
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+## Administrateur
+## Secrétaire
+### Leurs rôles respectifs :
 
-## Official Documentation
+<p>L’administrateur a accès à tous les fichiers et possèdes tous les droits sur l’application
+SCOLX.</p>
+<p>Le secrétariat est une sorte d’administrateur mais avec des accès restreint sur certaines
+fonctionnalités.</p>
 
-Documentation for the entire framework can be found on the [Laravel website](http://laravel.com/docs).
+## Auteur :
 
-### Contributing To Laravel
-
-**All issues and pull requests should be filed on the [laravel/framework](http://github.com/laravel/framework) repository.**
-
-### License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+<h4>M. BEZARA R. Florent</h4>
+<p>Développeur d'application web en Laravel.</p>
+<p>WhatsApp : +261 34 93 452 51</p>
+<p>Email : bezaraflorent@gmail.com</p>
