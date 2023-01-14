@@ -1,12 +1,14 @@
 <?php 
 $path = Session::get('language');
 $control = Control::find(1);
+@include('components.timeAgo'); 
 ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta author="Florent">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     <!-- Generics -->
@@ -19,15 +21,14 @@ $control = Control::find(1);
     <link rel="apple-touch-icon" href="assets/images/favicon/favicon-152.png" sizes="152x152">
     <link rel="apple-touch-icon" href="assets/images/favicon/favicon-167.png" sizes="167x167">
     <link rel="apple-touch-icon" href="assets/images/favicon/favicon-180.png" sizes="180x180">
+    <!--Default CSS -->
     {{HTML::style('public/assets/css/style.css')}}
+    <!-- END--->
     {{ HTML::style('public/assets/css/datatable.css') }}
-    
     {{ HTML::style('public/assets/js/Manage/vendor/select2/dist/css/select2.min.css') }}
     {{ HTML::style('public/assets/js/Manage/css/argon.css?v=1.2.0') }}
-
     {{ HTML::script('public/assets/js/other/jquery-3.6.0.js') }}
     {{ HTML::script('public/assets/js/other/jquery-ui.js') }}
-
     @yield('css')
 </head>
 <body>

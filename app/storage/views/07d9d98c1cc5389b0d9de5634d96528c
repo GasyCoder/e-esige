@@ -1,6 +1,7 @@
 <?php 
 $path = Session::get('language'); 
 $control = Control::find(1); 
+@include('components.timeAgo') 
 ?>
 <?php if(Auth::user()->is_admin): ?>
   <?php $__env->startSection('title'); ?> Administrateur <?php $__env->stopSection(); ?>
@@ -50,22 +51,25 @@ $control = Control::find(1);
                 <li>Menu</li>
             </ul>
         </section>
+        
         <div class="grid lg:grid-cols-1 gap-5">
+            <?php if(Auth::user()->is_student == 0): ?>
             <div class="alert alert_danger">
                     <strong class="uppercase"><bdi>Danger!</bdi></strong>
                     This is an alert message.
                     <button class="dismiss la la-times" data-dismiss="alert"></button>
             </div>
+            <?php endif; ?>
             <?php echo $__env->make('student.index', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         </div>
-            <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>         
 
-<?php $__env->startSection('js'); ?>
-<script src="<?php echo url(); ?>/public/assets/js/Sortable.min.js"></script>
-<?php $__env->stopSection(); ?>
-    </main>
-<?php endif; ?>
- <!--END STUDENT -->
+        <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>         
 
-<?php $__env->stopSection(); ?>
+        <?php $__env->startSection('js'); ?>
+        <script src="<?php echo url(); ?>/public/assets/js/Sortable.min.js"></script>
+        <?php $__env->stopSection(); ?>
+            </main>
+        <?php endif; ?>
+         <!--END STUDENT -->
+        <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

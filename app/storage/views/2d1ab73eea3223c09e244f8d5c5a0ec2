@@ -58,6 +58,24 @@
                                 <span class="text-red-700"><?php echo $errors->first('phone'); ?></span>
                                 <?php endif; ?>
                         </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="country">Pays</label>
+                            <?php echo Form::text('country', $user->country, ['id'=>'country', 'class'=>'form-control']); ?>
+
+                            <div class="help-block with-errors"></div>
+                                <?php if($errors->first('country')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('country'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="city">Ville</label>
+                            <?php echo Form::text('city', $user->city, ['id'=>'city', 'class'=>'form-control']); ?>
+
+                            <div class="help-block with-errors"></div>
+                                <?php if($errors->first('city')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('city'); ?></span>
+                                <?php endif; ?>
+                        </div>
 
                 </div>
             </div>

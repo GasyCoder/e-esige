@@ -51,37 +51,27 @@ class ParcourController extends BaseController {
 	public function updateParcour($id)
 	{
 		if (Request::ajax()){
-
 			$inputs = Input::all();
 			$validation = Validator::make($inputs, ['name'=>'required']);
 			if ($validation->fails()) {
 				return 'false';
 			} 
-
 			else {
-
 				$parcour = Parcour::find($id);
-
 				$parcour->name      = ($inputs['name']);
 				$parcour->abr       = ($inputs['abr']);
 				$parcour->class_id  = ($inputs['class_id']);
-				
 			}
-			
 			if (Input::has('status')) {
-
 			         $parcour->status = 1;
-
 			    } else {
 
 			         $parcour->status = 0;
-				
 				}
-
 				$parcour->save();
 				return 'true';		
-        }
-	}
+			}
+		}
 
 
 	/**

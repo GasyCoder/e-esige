@@ -17,7 +17,7 @@
 @endif
 
 @if(Session::has('warning'))
-    <div class="alert alert_info">
+    <div class="alert alert_primary">
         <strong class="uppercase"><bdi>Info!</bdi></strong>
        {{ Session::get('warning') }}
         <button type="button" class="dismiss la la-times" data-dismiss="alert"></button>

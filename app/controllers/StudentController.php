@@ -10,10 +10,11 @@ class StudentController extends BaseController
 			'fname'			=>'required',
 			'phone'		    =>'required',
 			'sexe'  		=> 'required',
+			'country' 		=> 'required',
+			'city'			=> 'required',
 			'email'         => 'required|unique:users',
             'matricule'     => 'required|unique:students',
 			'password'		=>'required|min:6',
-			'password_confirm'=>'required|same:password'
 	];
 
 	protected $updateRules = [	
@@ -25,11 +26,11 @@ class StudentController extends BaseController
 
     public function index() {
 
-        $title  = 'Etudiants';
-        $students = Student::count();
-        $years   = Year::where('status', 1)->first();
+        $title  	= 'Etudiants';
+        $students 	= Student::count();
+        $years   	= Year::where('status', 1)->first();
 
-        return View::make('admin.students.index', compact('students', 'years'))->with('title', $title);
+        return View::make('admin.students.index', compact('students', 'years', 'stud'))->with('title', $title);
     }
 
     public function selectNiveau()
@@ -106,7 +107,7 @@ class StudentController extends BaseController
                     'vague_id'          => $vague->id,
 					'yearsUniv'         => $year->yearsUniv,
                     'user_id' 			=> $user_id,
-                    'status' 			=> 1,
+                    'status' 			=> 0,
                     'token'             => $token
 				]);
 
@@ -121,13 +122,22 @@ class StudentController extends BaseController
                     'sexe' 	            => ($inputs['sexe']),
                     'phone' 	        => ($inputs['phone']),
                     'email' 	        => ($inputs['email']),
+                    'country' 	        => ($inputs['country']),
+                    'city' 	        	=> ($inputs['city']),
                     'token'             => $token
+			    ]);
+
+			    $varify 	= new Paycontrol ([
+                    'token'             => $token,
+                    'status' 			=> 0,
 			    ]);
 
 				$student->save();
                 $user->save();
                 $profile->save();
-                return Redirect::route('profileEtudiant', $student->token)->with('success', 'Etudiant '.$inputs['fname'].' ajouté avec succès!'); 
+                $varify->save();
+
+                return Redirect::route('steplatest_pay', $student->id)->with('warning', 'Veuillez ajouter le paiement.'); 
 			}
 	}
 
@@ -137,14 +147,21 @@ class StudentController extends BaseController
 		$profile 	= Student::where('token', 	$token)->first();
 		$user       = Profil::where('token',    $token)->first();
         $auth 	    = User::where('token',    	$token)->first();
-
-		return View::make('admin.students.showprofile', compact('profile','user', 'auth'))->with('title', $title);
+        $payers     = Pay::where('id_student',  $profile->id)->get();
+        $year       = Year::where('status', 1)->first();
+        $cours      = Lesson::where('id_student', $profile->id)->get();
+    if($profile !== Null){
+		return View::make('admin.students.showprofile', compact('profile','user', 'auth', 'payers', 'year', 'cours'))->with('title', $title);
 	}
+	else{
+		return Redirect::back()->withError('Une erreur est survenu!');
+	}
+}
 
     public function student_liste() {
 
         $title = 'Liste des étudiants';
-        $students = DB::table('students')->orderBy('id', 'asc')->get();
+        $students = DB::table('students')->orderBy('id', 'desc')->get();
         return View::make('admin.students.listes', compact('students'))->with('title', $title);
     }
 
@@ -176,8 +193,11 @@ class StudentController extends BaseController
 				$student->matricule = ($inputs['matricule']);
 
 				//other heritage student class
-				$user->phone = ($inputs['phone']);
-				$user->email = ($inputs['email']);
+				$user->phone 	= ($inputs['phone']);
+				$user->email 	= ($inputs['email']);
+				$user->country 	= ($inputs['country']);
+				$user->city 	= ($inputs['city']);
+
 				$user->sexe = ($inputs['sexe']);
 
 				$student->save();
@@ -213,4 +233,74 @@ class StudentController extends BaseController
 			}
    	 }
 	
+	/// Step to make Pyment for Student and the latest step for his enroll. 
+   	public function steplatest_pay($id){
+        $title  	= 'Ajouter paiement';
+        $step_pay 	= Student::find($id);
+        $verify 	= Paycontrol::find($id);
+        return View::make('admin.students.latest_step_pay', compact('step_pay', 'verify'))->with('title', $title);
+    }
+
+    public function sotre_firstpay($id)
+    {
+        $inputs         = Input::all();
+        $student        = Student::find($id);
+        $profile        = Profil::find($id);
+        $verify         = Paycontrol::find($id);
+        $user           = Auth::user()->id;
+        $client         = User::where('token',  $student->token)->first();
+        //$reset 			= Reset::where('token', $student->token)->first();
+        $validation     = Validator::make($inputs, [
+            'motif' => 'required',
+            'montant' => 'required|numeric',
+            'msg' => 'required',
+            'nbremois' => 'required|numeric',
+            'date' => 'required|date'
+            ]);
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation);
+        } 
+        else {
+            $token          = str_random(40);
+            $payment_index  = rand(11111, 99999);
+            $add            = Pay::create([
+            'user_id'       => $user,
+            'id_student'    => $id,
+            'motif'         => ($inputs['motif']),
+            'montant'       => ($inputs['montant']),
+            'msg'           => ($inputs['msg']),
+            'type'          => 'Fait par ESIGE',
+            'agence'        => 'Scolarité ESIGE',
+            'nbremois'      => ($inputs['nbremois']),
+            'payment_index' => $payment_index,
+            'token'         => $token,
+            'date'          => ($inputs['date']),
+            'status'        => 1
+            ]);   
+            $add->save();
+
+        if (Input::has('nbremois')) 
+        	
+            {$verify->mois_reste = $verify->mois_reste-($inputs['nbremois']);}
+            $verify->droit      = 1;
+            $verify->ecolage    = 1;
+            $verify->status     = 1;
+            $verify->save();
+
+            $student->status = 1;
+            $student->save();
+
+          $reset         = Reset::create([
+            'email'      => $profile->email,
+            'token'      => $profile->token,  
+            ]);
+          $reset->save();
+
+          Mail::send('emails.welcome', compact('client', 'student'), function($message) use ($client, $student){
+                $message->to($client->email, $student->fname . ' ' . $student->lname)
+                        ->subject('Bienvenue sur notre plateforme!');
+            });
+            return Redirect::route('student_liste')->withSuccess('Etudiant '.$student->fname.' a été ajouté et payé avec succès!'); 
+   		 } 
+	}
 }

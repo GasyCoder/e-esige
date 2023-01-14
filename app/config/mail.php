@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'odettex@gmail.com', 'name' => 'ESIGE'),
+	'from' => array('address' => 'scolarite@esige.mg', 'name' => 'ESIGE'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -87,7 +87,7 @@ return array(
 	|
 	*/
 
-	'username' => 'da8b784190ee30',
+	'username' => '6b3ec062ae678b',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ return array(
 	|
 	*/
 
-	'password' => '9a3cd8cfa5a791',
+	'password' => '379afcabd6860c',
 
 	/*
 	|--------------------------------------------------------------------------

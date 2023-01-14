@@ -19,13 +19,13 @@
                 <span class="icon la la-users"></span>
                 <span class="title">Utilisateurs</span>
             </button>
-            <button class="link" data-target="[data-menu=pages]" data-toggle="tooltip-menu" data-tippy-content="scolarite">
-                <span class="icon la la-university"></span>
-                <span class="title">Scolarité</span>
-            </button>
             <button class="link" data-target="[data-menu=pay]" data-toggle="tooltip-menu" data-tippy-content="pay">
                 <span class="icon la la-file-invoice-dollar"></span>
                 <span class="title">Paiements</span>
+            </button>
+            <button class="link" data-target="[data-menu=pages]" data-toggle="tooltip-menu" data-tippy-content="scolarite">
+                <span class="icon la la-university"></span>
+                <span class="title">Scolarité</span>
             </button>
             <button class="link" data-target="[data-menu=applications]" data-toggle="tooltip-menu"
                 data-tippy-content="suopport">
@@ -42,7 +42,6 @@
                 <span class="title">Paramètre</span>
             </a>
         </div>
-
         <!-- UI -->
         <div class="menu-detail" data-menu="ui">
             <div class="menu-detail-wrapper">
@@ -61,6 +60,34 @@
                 </a>
             </div>
         </div>
+        <!-- Payement -->
+        <div class="menu-detail" data-menu="pay">
+            <div class="menu-detail-wrapper">
+                <h6 class="uppercase">Ajout/Contrôle</h6>
+                 <a href="{{URL::route('pay_stud_Class')}}">
+                    <span class="la la-plus-circle"></span>
+                    Ajouter paiement
+                </a>
+                <a href="{{URL::route('chekpay')}}">
+                    <span class="la la-check-circle"></span>
+                    Vérification de paiement
+                </a>
+                <hr>
+                <h6 class="uppercase">Gestion de paiement</h6>
+                <a href="{{URL::route('typeControle')}}">
+                    <span class="la la-dollar"></span>
+                    Type de paiement
+                </a>
+                <!--<a href="{{URL::route('motifControle')}}">
+                    <span class="la la-chalkboard-teacher"></span>
+                    Motif de paiement 
+                </a>-->
+                <a href="{{URL::route('regleControle')}}">
+                    <span class="la la-file-alt"></span>
+                    Règles de paiement
+                </a>
+            </div>
+        </div>
 
         <!-- Pages -->
         <div class="menu-detail" data-menu="pages">
@@ -73,6 +100,10 @@
                 <a href="{{URL::route('indexParcour')}}">
                     <span class="la la-list"></span>
                     Parcours
+                </a>
+                <a href="{{URL::route('addvague')}}">
+                    <span class="icon la la-sitemap"></span>
+                    Vagues
                 </a>
                 <a href="{{URL::route('tarif_index')}}">
                     <span class="la la-file-invoice-dollar"></span>
@@ -89,12 +120,6 @@
                     Elements Constitutifs
                 </a>
                 <hr>
-                <h6 class="uppercase">Contrôle</h6>
-                <a href="blog-list.html">
-                    <span class="la la-dollar"></span>
-                    Vérification de paiement
-                </a>
-                <hr>
                 <h6 class="uppercase">Année/Semestres</h6>
                 <a href="{{URL::route('indexYear')}}">
                     <span class="la la-calendar-plus"></span>
@@ -107,31 +132,11 @@
                 </a>
             </div>
         </div>
-
-        <!-- Payement -->
-        <div class="menu-detail" data-menu="pay">
-            <div class="menu-detail-wrapper">
-                <h6 class="uppercase">Gestion de paiement</h6>
-                <a href="{{URL::route('typeControle')}}">
-                    <span class="la la-user-graduate"></span>
-                    Type de paiement
-                </a>
-                <a href="{{URL::route('motifControle')}}">
-                    <span class="la la-chalkboard-teacher"></span>
-                    Motif de paiement 
-                </a>
-                <a href="{{URL::route('regleControle')}}">
-                    <span class="la la-user-plus"></span>
-                    Règles de paiement
-                </a>
-            </div>
-        </div>
-
         <!-- Applications -->
         <div class="menu-detail" data-menu="applications">
             <div class="menu-detail-wrapper">
                 <h6 class="uppercase">Support des cours</h6>
-                <a href="applications-media-library.html">
+                <a href="{{URL::route('checkClassCours')}}">
                     <span class="la la-file-pdf"></span>
                     Cours en pdf
                 </a>

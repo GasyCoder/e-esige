@@ -1,0 +1,22 @@
+<?php $path = Session::get('language'); ?>
+
+
+<?php $__env->startSection('title'); ?> <?php echo Lang::get($path.'.reset_code_error'); ?> <?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <!-- Top Bar -->
+    <section class="top-bar">
+        <!-- Brand -->
+    <span class="text-xl">e-<span class="brand">ESIGE</span></span>
+    </section>
+    <div class="container flex items-center justify-center mt-0 py-10">
+        <div class="w-full md:w-1/2 xl:w-1/3">
+            <div class="mx-5 md:mx-10 text-center uppercase">
+                <h2 class="text-primary mt-5"><?php echo Lang::get($path.'.reset_code_error'); ?></h2>
+                <h5 class="mt-2">Veuillez réunitialiser encore.</h5>
+                <a href="<?php echo URL::route('remind_users_reset'); ?>" class="btn btn_primary mt-5 ltr:ml-2 rtl:mr-2">RETENTER</a>
+            </div>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.default', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

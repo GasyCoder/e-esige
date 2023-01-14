@@ -10,37 +10,45 @@
                 <ul>
                     <li><a href="#">Menu</a></li>
                     <li class="divider la la-arrow-right"></li>
-                    <li>page</li>
+                    <li>Liste</li>
                 </ul>
             </div>
+            <!-- Actions -->
+            <div class="breadcrumb breadcrumb_alt p-4 flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
+                <span class="leading-none ltr:mr-1 rtl:ml-1"></span> <h5 class="bg_red">Total:<?php echo count($students); ?></h5>
+                 <?php if(Session::has('download')): ?>
+                <a href="<?php echo url(); ?>/uploads/data/<?php echo Session::get('download'); ?>" class="btn btn_warning text-gray-600">
+                    <span class="la la-cloud-download-alt text-xl leading-none ltr:mr-1 rtl:ml-1 text-gray-600"></span>
+                    <span class="text-gray-600">Télécharger .csv</span>
+                </a>
+                <?php endif; ?>
+                <?php echo Form::open(['route'=>'data_export', 'files'=>'true' , 'id'=>'myForm', 'data-toggle'=>'validator']); ?>
 
-            <div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
-                <!-- Layout -->
-                <div class="flex gap-x-2">
-                    <a href="#no-link" class="btn btn_outlined btn_primary">
-                        <span class="la la-undo"></span> Retour
-                    </a>
+                <div class="form-group">
+                <button type="submit" class="btn btn_info">
+                    <span class="la la-file-alt text-xl leading-none ltr:mr-1 rtl:ml-1"></span> Exporter
+                </button>
                 </div>
+               <?php echo Form::close(); ?>
 
-                <div class="flex gap-x-2">
-                    <!-- Add New -->
-                    <a href="<?php echo URL::route('selectNiveau'); ?>" class="btn btn_primary uppercase"><span class="la la-plus-circle text-xl leading-none"></span> Ajouter nouveau</a>
+                <div class="flex flex-wrap gap-2 ltr:ml-auto rtl:mr-auto">
+                    <a href="<?php echo URL::route('selectNiveau'); ?>" class="btn btn_primary uppercase"><span class="la la-plus-circle text-xl leading-none"></span> Ajouter</a>
                 </div>
             </div>
         </section>
-
         <!-- List -->
         <div class="card p-5">
+            <?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             <div class="overflow-x-auto">
                 <table class="table-sorter table table-auto table_hoverable w-full">
                      <thead>
                         <tr>
                             <th class="ltr:text-left rtl:text-right">Photo</th>
                             <th class="ltr:text-left rtl:text-right">Matricule</th>
-                            <th class="ltr:text-left rtl:text-right">Vague</th>
                             <th class="ltr:text-left rtl:text-right">Nom complet</th>
+                            <th class="ltr:text-left rtl:text-right">Vague</th>
                             <th class="ltr:text-left rtl:text-right">Niveau </th> 
-                            <th class="ltr:text-left rtl:text-right">Parcour </th>                
+                            <th class="ltr:text-left rtl:text-right">Parcours </th>                
                             <th class="text-center" style="text-align:center">Actions</th>
                         </tr>
                     </thead>
@@ -50,12 +58,15 @@
                      $class     = TheClass::where('id', $student->class_id)->first(); 
                      $parcour   = Parcour::where('id',  $student->parcour_id)->first();
                      $vague     = Vague::where('id',    $student->vague_id)->first();
+                     $user      = Profil::where('id', $student->id)->first();
                     ?>
                         <tr>
                             <td>
-                            <?php if(!empty($student->user->photo)): ?>
-                                <?php echo HTML::image('uploads/profiles/students/'.$student->photo.'', '', ['class'=>'avatar w-20 h-20', 'width'=>'180','height'=>'80']) 
+                            <?php if(!empty($user->photo)): ?>
+                                <div class="avatar avatar_with-shadow w-16 h-16">
+                                <?php echo HTML::image('uploads/profiles/students/'.$user->photo.'', '', ['class'=>'']) 
                                 ?>
+                                </div>
                                 <?php else: ?> 
                                 <div class="flex items-center gap-x-4 mt-4">
                                     <?php 
@@ -69,17 +80,18 @@
                                 <?php endif; ?>
                             </td>
                             <td class="font-bold"><?php echo $student->matricule; ?></td>
-                            <td class="font-bold"><?php echo $vague->abr; ?></td>
                             <td class="font-bold"><?php echo $student->fname.' '.$student->lname; ?></td>
+                            <td class="font-bold"><?php echo $vague->abr; ?></td>
                             <td class="font-bold"><?php echo $class->short; ?></td>
                             <td class="font-bold"><?php echo $parcour->abr; ?></td>
                             <td class="text-center">
                                 <div class="inline-flex ltr:ml-auto rtl:mr-auto">
-                                 <a href="<?php echo URL::route('profileEtudiant', $student->token); ?>" class="btn btn-icon btn_success">
+                                 <a href="<?php echo URL::route('profileEtudiant', $student->token); ?>" class="btn btn-icon btn_success ltr:ml-2 rtl:mr-2">
                                   <span class="la la-user"></span>
                                 </a>    
-                                <a href="<?php echo URL::route('editStudent', $student->token); ?>" class="btn btn-icon btn_primary ltr:ml-2 rtl:mr-2"> <span class="la la-pen-fancy"></span></a>
-                              </div>
+                                <a href="<?php echo URL::route('editStudent', $student->token); ?>" class="btn btn-icon btn_primary ltr:ml-2 rtl:mr-2"> <span class="la la-user-edit"></span>
+                                </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

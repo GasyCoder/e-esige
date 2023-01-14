@@ -1,6 +1,18 @@
 <?php $path = Session::get('language'); ?>
 <?php $__env->startSection('title'); ?> <?php echo $title. ' - ' .$profile->fname. ' '.$profile->lname; ?> <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
+<style type="text/css">
+.profile_cover {
+  background-image: url('<?php echo url(); ?>/uploads/profiles/students/<?php echo $user->cover_picture; ?>');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
+}
+.picture_profile img{
+  opacity: 1;
+}
+</style>
 <!-- Workspace -->
     <main class="workspace">
         <!-- Breadcrumb -->
@@ -17,13 +29,20 @@
         <div class="grid lg:grid-cols-4 gap-5">
             <!-- Categories -->
             <div class="lg:col-span-2 xl:col-span-1">
-                     <div class="flex items-center justify-center gap-x-4 mt-4 dropzone">
-                        <div class="">
-                            <?php if(!empty($user->photo)): ?>
-                            <?php echo HTML::image('uploads/profiles/students/'.$user->photo.'', '', ['class'=>'avatar w-20 h-20', 'width'=>'180','height'=>'80']) 
-                            ?>
-                            <?php else: ?> 
-                             <div class="flex items-center gap-x-4 mt-4">
+                <div class="border">              
+                    <?php if(!empty($user->photo)): ?> 
+                    <div class="flex items-center justify-center gap-x-0 cover_pic 
+                    profile_cover"> 
+                    </div>
+                    <?php endif; ?>
+                    <div class="flex items-center justify-center gap-x-0">
+                       <?php if(!empty($user->photo)): ?>
+                        <div class="avatar avatar_with-shadow w-20 h-20">
+                            <div class="status bg-success"></div>
+                            <img src="<?php echo url(); ?>/uploads/profiles/students/<?php echo $user->photo; ?>" class="picture_profile">
+                        </div>
+                        <?php else: ?> 
+                        <div class="flex items-center gap-x-4">
                                 <?php 
                                   $fname = substr($profile->fname,0,1);
                                   $lname = substr($profile->lname,0,1);
@@ -32,11 +51,11 @@
 
                                     <div class="status bg-success"></div>
                                 </div>
-                             </div>
-                            <?php endif; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
-                <div class="card p-5 mt-3">
+                </div>  
+                <div class="info_pic p-5">
                     <h3>Informations</h3>
                     <div class="mt-5 leading-normal">
                         <a href="#no-link" class="flex items-center text-normal">
@@ -70,14 +89,25 @@
 
                         </a>
                         <hr class="my-2">
-                          <a href="#no-link" class="flex items-center text-normal">
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-globe-africa text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Pays : <?php echo $user->country; ?>
+
+                            </a>
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-city text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Ville : <?php echo $user->city; ?>
+
+                            </a>
+                            <hr>
+                            <a href="#no-link" class="flex items-center text-normal">
                                 <span class="la la-envelope text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
                                 Email : <?php echo $user->email; ?>
 
                             </a>
                             <a href="#no-link" class="flex items-center text-normal">
                                 <span class="la la-phone text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
-                                Tél : <?php echo $profile->phone; ?>
+                                Tél : <?php echo $user->phone; ?>
 
                             </a>
                             <?php if($user->fb !== NULL): ?>
@@ -94,33 +124,77 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FAQs -->
+            <!-- Payment -->
             <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-3">
                 <?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+              <?php if(count($payers)> 0): ?>  
                 <div class="card p-5">
                     <h3>Etat de paiement</h3>
-                   <table class="table table_bordered w-full">
+                   <table class="table table_bordered w-full mt-3">
                         <thead>
                             <tr>
                                 <th class="ltr:text-left rtl:text-right uppercase">Année</th>
-                                <th class="ltr:text-left rtl:text-right uppercase">Mois</th>
+                                <th class="text-center uppercase">Mois</th>
                                 <th class="ltr:text-left rtl:text-right uppercase">Objet</th>
-                                <th class="ltr:text-left rtl:text-right uppercase">Status</th>
+                                <th class="ltr:text-left rtl:text-right uppercase">Date/Heur</th>
+                                <th class="text-center uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody>
+                          <?php foreach($payers as $payer): ?>      
                             <tr>
-                                <td>1</td>
-                                <td>John</td>
-                                <td>Doe</td>
-                                <td>@john</td>
+                                <td><?php echo $year->yearsUniv; ?></td>
+                                <td class="text-center font-bold"><?php echo $payer->nbremois; ?></td>
+                                <td><?php echo $payer->motif; ?></td>
+                                <td class=""><?php echo $payer->created_at->format('d/m/y à H:i:s'); ?></td>
+                                <td class="text-center">
+                                  <?php if($payer->status == 1): ?>
+                                  <button class="badge badge_outlined badge_success">Payé</button>
+                                  <?php else: ?>
+                                  <button class="badge badge_outlined badge_danger">En attente</button>
+                                  <?php endif; ?>
+                                </td>
                             </tr>
+                         <?php endforeach; ?>   
                         </tbody>
                     </table>
                 </div>
-
-        <div class="grid lg:grid-cols-4 gap-5">
+                <?php else: ?>
+                <?php endif; ?>
+                <?php if(count($cours)> 0): ?>
+                <!-- Activation Cours -->
+                <div class="card p-5">
+                <h3>Gérer les cours</h3>
+                <table class="table table_bordered w-full mt-3">
+                        <thead>
+                            <tr>
+                                <th class="ltr:text-left rtl:text-right uppercase">Matières</th>
+                                <th class="text-center uppercase">Fichier</th>
+                                <th class="text-center uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach($cours as $cour): ?>    
+                            <tr>
+                                <td><?php echo $cour->matiere->name; ?></td>
+                                <td class="text-center">
+                                   <a href="<?php echo url(); ?>/uploads/support_files/<?php echo $cour->support->file; ?>" target="_blank" class="text-red-700"><i><span class="la la-paperclip "></span> document format pdf</i></a> 
+                                </td>
+                                <td class="text-center">
+                                 <?php if($cour->status == 1): ?> 
+                                  <a href="#" class="badge badge_success">Actif</a>
+                                 <?php else: ?>
+                                 <a href="#" class="badge badge_danger">Inactif</a>
+                                 <?php endif; ?>
+                                </td>
+                            </tr>
+                         <?php endforeach; ?>   
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                <?php endif; ?>
+            <div class="grid lg:grid-cols-4 gap-5">
             <!-- Content -->
             <div class="lg:col-span-1 xl:col-span-3">
                 <div class="card p-5">

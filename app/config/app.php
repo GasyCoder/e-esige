@@ -125,7 +125,7 @@ return array(
 		'Laracasts\Flash\FlashServiceProvider',
 		'SimpleSoftwareIO\QrCode\QrCodeServiceProvider',
 		'Barryvdh\DomPDF\ServiceProvider',
-
+		'Intervention\Image\ImageServiceProvider',
 
 	),
 
@@ -196,6 +196,7 @@ return array(
 
 		'QrCode' 			=> 'SimpleSoftwareIO\QrCode\Facades\QrCode',
 		'PDF' 				=> 'Barryvdh\DomPDF\Facade',
+		'Image' 			=> 'Intervention\Image\Facades\Image::class',
 	),
 
 );

@@ -2,6 +2,7 @@
 <?php 
 $path = Session::get('language'); 
 $control = Control::find(1); 
+@include('components.timeAgo') 
 ?>
 @if(Auth::user()->is_admin)
   @section('title') Administrateur @stop
@@ -51,21 +52,24 @@ $control = Control::find(1);
                 <li>Menu</li>
             </ul>
         </section>
+        
         <div class="grid lg:grid-cols-1 gap-5">
+            @if(Auth::user()->is_student == 0)
             <div class="alert alert_danger">
                     <strong class="uppercase"><bdi>Danger!</bdi></strong>
                     This is an alert message.
                     <button class="dismiss la la-times" data-dismiss="alert"></button>
             </div>
+            @endif
             @include('student.index')
         </div>
-            @include('components.pages.footer')         
 
-@section('js')
-<script src="{{url()}}/public/assets/js/Sortable.min.js"></script>
-@endsection
-    </main>
-@endif
- <!--END STUDENT -->
+        @include('components.pages.footer')         
 
-@stop
+        @section('js')
+        <script src="{{url()}}/public/assets/js/Sortable.min.js"></script>
+        @endsection
+            </main>
+        @endif
+         <!--END STUDENT -->
+        @stop

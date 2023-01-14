@@ -26,7 +26,7 @@ class Student extends Eloquent {
 		return $this->belongsTo('Profil', 'id');
 	}
 
-	public function controlpay() {
+	public function verify() {
 		return $this->belongsTo('Paycontrol', 'id');
 	}
 }

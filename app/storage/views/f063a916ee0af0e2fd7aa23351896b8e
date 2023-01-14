@@ -1,0 +1,70 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> <?php echo $title; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?> 
+<!-- Workspace -->
+<main class="workspace">
+<section class="breadcrumb">        
+<?php echo $__env->make('components.break', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</section>
+        <!-- Actions -->
+        <div class="breadcrumb breadcrumb_alt p-4 flex flex-wrap gap-2">
+            <a href="<?php echo URL::route('panel.student'); ?>" class="btn btn_outlined btn_primary">
+                <span class="la la-undo text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                Retour
+            </a>
+            <div class="flex flex-wrap gap-2 ltr:ml-auto rtl:mr-auto">
+                <a href="<?php echo URL::route('index_pay'); ?>" class="btn btn_primary uppercase">
+                    <span class="la la-plus-circle text-xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                    Paiement
+                </a>
+            </div>
+        </div>
+<?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>     
+        <!--Content -->
+            <div class="flex flex-col gap-y-5">
+                <div class="card p-5">
+                    <table class="table table_bordered w-full mt-3">
+                        <thead>
+                            <tr>
+                                <th class="ltr:text-left rtl:text-right">#</th>
+                                <th class="ltr:text-left rtl:text-right">Motif</th>
+                                <th class="text-center">Montant</th>
+                                <th class="ltr:text-left rtl:text-right">Date/Heur</th>
+                                <th class="center" style="text-align:center;">Status</th>
+                                <th class="center" style="text-align:center;">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($payments as $key => $payment): ?> 
+                            <tr>
+                                <td><?php echo $key+1; ?></td>
+                                <td class=""><?php echo $payment->motif; ?></td>
+                                <td class="text-center" width="120"><?php echo $payment->montant; ?></td>
+                                <td class="" width="160"><?php echo $payment->created_at->format('d/m/y à H:m:s'); ?></td>
+                                <td class="text-center" width="100">
+                                 <?php if($payment->status == 0): ?> 
+                                  <button class="badge badge_outlined badge_danger">En attente...</button>  
+                                  <?php else: ?> 
+                                  <button class="badge badge_outlined badge_success">Payé</button> 
+                                  <?php endif; ?>
+                                </td>
+                                <td class="text-center" width="100">
+                                <div class="inline-flex ltr:ml-auto rtl:mr-auto">
+                                    <a href="#" class="btn btn-icon btn_success">
+                                        <span class="la la-eye"></span>
+                                    </a>
+                                </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <!--- Fin content -->
+    <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>     
+    <?php $__env->startSection('js'); ?>
+    <!--Add JS -->
+    <?php $__env->stopSection(); ?>
+</main>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

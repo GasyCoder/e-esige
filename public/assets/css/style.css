@@ -17,7 +17,6 @@
 @import url(assets/css/fonts/8.css);
 
 /* Line Awesome */
-
 .la,
 .las,
 .lar,
@@ -14228,6 +14227,18 @@ Search & Select
 Dropzone
 */
 
+.cover_pic {
+    display: flex;
+    height: 6.2rem;
+    align-items: center;
+    justify-content: center;
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: rgb(209 213 219 / var(--tw-border-opacity));
+    border-color: rgb(var(--color-border) / var(--tw-border-opacity));
+    padding: 1.25rem;
+}
+
 .dropzone {
     display: flex;
     height: 10rem;
@@ -17058,6 +17069,17 @@ Breadcrumb
     color: rgb(var(--color-primary) / var(--tw-text-opacity));
 }
 
+.info_pic {
+    border-radius: 0px;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: rgb(var(--color-foreground) / var(--tw-bg-opacity));
+    --tw-bg-opacity: 0.2;
+    --tw-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.16);
+    --tw-shadow-colored: 1px 1px 5px 0 var(--tw-shadow-color);
+    box-shadow: 0 0 #0000, 0 0 #0000, var(--tw-shadow);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .breadcrumb_alt {
     border-radius: 10px;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -17905,6 +17927,10 @@ Backdrop
     --tw-border-opacity: 1;
     border-color: rgb(209 213 219 / var(--tw-border-opacity));
     border-color: rgb(var(--color-border) / var(--tw-border-opacity));
+}
+.border-red-500 {
+    --tw-border-opacity: 1;
+    border-color: rgb(239 68 68);
 }
 
 .border-primary {
@@ -19244,6 +19270,11 @@ Backdrop
 .text-green-700 {
     --tw-text-opacity: 1;
     color: #2f855a;
+}
+
+.text-gray-100 { 
+    --tw-text-opacity: 1;
+    color: #f7fafc; 
 }
 
 .text-green-800 {

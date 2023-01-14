@@ -1,4 +1,5 @@
 @extends('layouts.default')
+<?php $control = Control::find(1); ?>
 @section('title') Se connecter @stop
 @section('content')
     <!-- Top Bar -->
@@ -21,7 +22,7 @@
         <div class="w-full md:w-1/2 xl:w-1/3">
                     <div class="flex items-center justify-center gap-x-4 mt-4">
                         <div class="avatar w-20 h-20">
-                            <img src="">
+                           <img src="{{ url() }}/public/uploads/logo/{{$control->logo}}">
                         </div>
                     </div>
             @include('components.alerts')        
@@ -50,7 +51,7 @@
                     @endif
                 </div>
                 <div class="flex items-center">
-                    <a href="{{URL::route('remind_users_reset')}}" class="text-sm">Mot de passe oublié?</a>
+                    <a href="{{URL::route('remind_users_reset')}}" class="text-sm">Réinitialiser le mot de passe</a>
                      <button type="submit" class="btn btn_primary uppercase ltr:ml-auto rtl:mr-auto"><span class="la la-lock"></span> Se connecter</button>
                 </div>
             {{Form::close()}}

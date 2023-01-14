@@ -1,4 +1,4 @@
-@if(Auth::user()->is_admin)
+@if(!Auth::user()->is_admin)
 @if(!Auth::user()->is_secretaire) 
  <!-- IMPORTANT: Replace the following line with the contents from included file for Laravel Mix -->
     <!-- Customizer -->

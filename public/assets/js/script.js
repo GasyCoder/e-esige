@@ -1,3 +1,11 @@
+//This is provided by ChatGPT to hidden menubar when mobile device.
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+   $('.menu-bar').hide();
+   $('.menu-toggler').on('click', function(){
+      $('.menu-bar').show();
+   });
+}
+// end code 
 document.addEventListener("DOMContentLoaded", (() => {
     const e = document.getElementById("carousel-style-1");
     if (e) {

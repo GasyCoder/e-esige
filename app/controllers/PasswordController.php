@@ -25,17 +25,17 @@ class PasswordController extends BaseController {
 
 
 				$control = Control::find(1);
-				$school_name = $control->school_name;
+				$univ_name = $control->univ_name;
 
 				$from = 'no-reply@'.$_SERVER['SERVER_NAME'];
 
 
 			//	Password::remind($credentials);
-				Password::remind(Input::only('email'), function($message) use ($from, $school_name) {
+				Password::remind(Input::only('email'), function($message) use ($from, $univ_name) {
 
-    				$message->from($from, $school_name);
+    				$message->from($from, $univ_name);
 
-				    $message->subject('reset your password');
+				    $message->subject('Réinitialisez votre mot de passe.');
 				    
 				});
 
@@ -58,7 +58,7 @@ class PasswordController extends BaseController {
 	public function reset($token)
 	{
 	  
-		$email = DB::table('password_reminders_fste')->where('token', $token)->first();
+		$email = DB::table('password_reminders')->where('token', $token)->first();
 
 		if (count($email) >= 1 ) {
 
@@ -79,7 +79,7 @@ class PasswordController extends BaseController {
 		$check = DB::table('password_reminders')->where('token', $inputs['token'])->where('email', $inputs['email'])->first();
 
 		if ( count($check) == 1 ) {
-			$user_id = DB::table('users_fste')->where('email', $check->email)->first();
+			$user_id = DB::table('users')->where('email', $check->email)->first();
 
 			$user = User::find($user_id->id);
 
@@ -91,7 +91,7 @@ class PasswordController extends BaseController {
 
 			$path = Session::get('language');
 
-			return Redirect::route('auth.login')->withSuccess(Lang::get($path.'.reset_success'));
+			return Redirect::route('login')->withSuccess(Lang::get($path.'.reset_success'));
 
 
 		}

@@ -9,18 +9,33 @@
                 <p class="mt-2 text-gray-600">frais de foramtion + autres</p>
             </div>
         </a>
-        <a href="#">
+        <?php if($student == 1): ?>
+        <a href="<?php echo URL::route('cours_index'); ?>">
             <div class="card border border-divider px-4 py-8 text-center lg:transform hover:scale-110 hover:shadow-lg transition-transform duration-200">
-                <span class="text-primary text-5xl leading-none la la-folder-plus"></span>
-                <h5 class="text-primary leading-none mt-5">Support du Cours</h5>
+                <span class="text-primary text-5xl leading-none la la-book"></span>
+                <h5 class="text-primary leading-none mt-5">Leçons/Cours</h5>
                 <p class="mt-2 text-gray-600">format .pdf,ppt,docx</p>
             </div>
         </a>
+        <?php else: ?>
+        <div class="border border-divider px-4 py-8 text-center">
+            <span class="text-gray-300 text-5xl leading-none la la-lock"></span>
+            <h5 class="text-gray-300 leading-none mt-5">Menu bloquer</h5>
+            <p class="mt-2 text-gray-300">Bientôt disponible</p>
+        </div>
+        <?php endif; ?>
         <a href="#">
             <div class="card border border-divider px-4 py-8 text-center lg:transform hover:scale-110 hover:shadow-lg transition-transform duration-200">
                 <span class="text-primary text-5xl leading-none la la-file-contract"></span>
                 <h5 class="text-primary leading-none mt-5">Exercices</h5>
                 <p class="mt-2 text-gray-600">Sujets + Correction</p>
+            </div>
+        </a>
+        <a href="#">
+            <div class="card border border-divider px-4 py-8 text-center lg:transform hover:scale-110 hover:shadow-lg transition-transform duration-200">
+                <span class="text-primary text-5xl leading-none la la-youtube"></span>
+                <h5 class="text-primary leading-none mt-5">Explication de l'esneignant</h5>
+                <p class="mt-2 text-gray-600">Explication des cours</p>
             </div>
         </a>
         <a href="#">
@@ -32,28 +47,21 @@
         </a>
         <a href="#">
             <div class="card border border-divider px-4 py-8 text-center lg:transform hover:scale-110 hover:shadow-lg transition-transform duration-200">
-                <span class="text-primary text-5xl leading-none la la-list"></span>
-                <h5 class="text-primary leading-none mt-5">Unité d'enseignements</h5>
-                <p class="mt-2 text-gray-600">Liste par semestre</p>
+                <span class="text-primary text-5xl leading-none la la-user-shield"></span>
+                <h5 class="text-primary leading-none mt-5">Règlements intérieur</h5>
+                <p class="mt-2 text-gray-600">règles et conditions d'utulisation</p>
             </div>
         </a>
-        <a href="#">
-            <div class="card border border-divider px-4 py-8 text-center lg:transform hover:scale-110 hover:shadow-lg transition-transform duration-200">
-                <span class="text-primary text-5xl leading-none la la-list-alt"></span>
-                <h5 class="text-primary leading-none mt-5">Matières</h5>
-                <p class="mt-2 text-gray-600">Liste par semestre</p>
-            </div>
-        </a>
-            <div class="border border-divider px-4 py-8 text-center">
-                    <span class="text-gray-300 text-5xl leading-none la la-lock"></span>
-                    <h5 class="text-gray-300 leading-none mt-5">Menu bloquer</h5>
-                    <p class="mt-2 text-gray-300">Bientôt disponible</p>
-            </div>
-            <div class="border border-divider px-4 py-8 text-center">
+        <div class="border border-divider px-4 py-8 text-center">
                 <span class="text-gray-300 text-5xl leading-none la la-lock"></span>
                 <h5 class="text-gray-300 leading-none mt-5">Menu bloquer</h5>
                 <p class="mt-2 text-gray-300">Bientôt disponible</p>
-            </div>
+        </div>
+        <div class="border border-divider px-4 py-8 text-center">
+            <span class="text-gray-300 text-5xl leading-none la la-lock"></span>
+            <h5 class="text-gray-300 leading-none mt-5">Menu bloquer</h5>
+            <p class="mt-2 text-gray-300">Bientôt disponible</p>
+        </div>
         </div>
     </div>
 </div>

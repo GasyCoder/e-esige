@@ -1,0 +1,265 @@
+<?php $path = Session::get('language'); ?>
+<?php $__env->startSection('title'); ?> <?php echo $title. ' - ' .$profile->fname. ' '.$profile->lname; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+<style type="text/css">
+.profile_cover {
+  background-image: url('<?php echo url(); ?>/uploads/profiles/students/<?php echo $user->cover_picture; ?>');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
+}
+.picture_profile img{
+  opacity: 1;
+}
+</style>
+<!-- Workspace -->
+    <main class="workspace">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb">
+            <h1><?php echo $title; ?></h1>
+            <ul>
+                <li><a href="<?php echo URL::route('panel.student'); ?>">Menu</a></li>
+                <li class="divider la la-arrow-right"></li>
+                <li>Profil</li>
+            </ul>
+        </section>
+         <?php echo $__env->make('components.alerts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+        <div class="grid lg:grid-cols-4 gap-5">
+        <div class="lg:col-span-2 xl:col-span-1 mt-3"> 
+                <div class="border">              
+                    <?php if(!empty($user->photo)): ?> 
+                    <div class="flex items-center justify-center gap-x-0 cover_pic 
+                    profile_cover"> 
+                    </div>
+                    <?php endif; ?>
+                    <div class="flex items-center justify-center gap-x-0">
+                       <?php if(!empty($user->photo)): ?>
+                        <div class="avatar avatar_with-shadow w-20 h-20">
+                            <div class="status bg-success"></div>
+                            <img src="<?php echo url(); ?>/uploads/profiles/students/<?php echo $user->photo; ?>" class="picture_profile">
+                        </div>
+                        <?php else: ?> 
+                        <div class="flex items-center gap-x-4">
+                                <?php 
+                                  $fname = substr($profile->fname,0,1);
+                                  $lname = substr($profile->lname,0,1);
+                                ?>
+                                <div class="avatar avatar_with-shadow bg-primary font-bold w-20 h-20 text-4xl"><?php echo ($fname.''.$lname); ?>
+
+                                    <div class="status bg-success"></div>
+                                </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    </div>         
+                    <div class="info_pic p-5">
+                    <div class="mt-0 leading-normal">
+                        <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-user text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                            <?php echo $profile->fname. ' '.$profile->lname; ?>
+
+                        </a>
+                        <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-genderless text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                           Sexe :  <?php if($profile->sexe == 1): ?> Homme <?php else: ?> Femme <?php endif; ?>
+                        </a>
+                        <hr class="my-2">
+                         <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-qrcode text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                            N° matricule : <?php echo $profile->matricule; ?>
+
+                        </a>
+                        <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-user-graduate text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                            Niveau : <?php echo $profile->class->note; ?>
+
+                        </a>
+                        <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-list text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                            Parcour : <?php echo $profile->parcour->abr; ?>
+
+                        </a>
+                        <a href="#no-link" class="flex items-center text-normal">
+                            <span class="la la-graduation-cap text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                            Vague : <?php echo $profile->vague->abr; ?>
+
+                        </a>
+                        <hr class="my-2">
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-globe-africa text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Pays : <?php echo $user->country; ?>
+
+                            </a>
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-city text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Ville : <?php echo $user->city; ?>
+
+                            </a>
+                            <hr>
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-envelope text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Email : <?php echo $user->email; ?>
+
+                            </a>
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-phone text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Tél : <?php echo $user->phone; ?>
+
+                            </a>
+                            <?php if($user->fb !== NULL): ?>
+                            <a href="https://web.facebook.com/<?php echo $user->fb; ?>" target="_blank" class="flex items-center text-normal">
+                                <span class="la la-facebook text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                <?php echo $user->fb; ?>
+
+                            </a>
+                            <?php endif; ?>
+                    </div>  
+                </div>
+            </div>
+            <!-- Info students -->
+            <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-3">
+          <?php echo Form::open(['route'=>['update_profile', $profile->token], 'files'=>'true', 'class'=>'', 'id'=>'myForm', 'data-toggle'=>'validator']); ?>
+
+            <div class="flex flex-col gap-y-5 grid lg:grid-cols-4 gap-5">
+            <div class="lg:col-span-2 xl:col-span-3">
+                <div class="card p-5 mt-3">
+                    <div class="flex flex-wrap flex-row -mx-4"> 
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="fname">Nom</label>
+                            <?php echo Form::text('fname', $profile->fname, ['id'=>'fname', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('fname')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('fname'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="lname">Prénom(s) <small>option</small></label>
+                            <?php echo Form::text('lname', $profile->lname, ['id'=>'lname', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('lname')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('lname'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="fb">Facebook</label>
+                            <?php echo Form::text('fb', $user->fb, ['id'=>'fb', 'class'=>'form-control']); ?>
+
+                             <div class="help-block with-errors"></div>
+                                <?php if($errors->first('fb')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('fb'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="phone">Télephone</label>
+                            <?php echo Form::text('phone', $user->phone, ['id'=>'phone', 'class'=>'form-control']); ?>
+
+                            <div class="help-block with-errors"></div>
+                                <?php if($errors->first('phone')): ?>
+                                <span class="text-red-700"><?php echo $errors->first('phone'); ?></span>
+                                <?php endif; ?>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                        <button class="btn btn_success"><span class="la la-sync text-xl leading-none"></span> Mettre à jour</button>
+                    </div>
+                    </div>
+                </div>
+                 <?php echo $__env->make('student.ajax.jsUp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                </div>
+                <?php echo Form::close(); ?>
+
+                <?php echo Form::open(['route'=>['photoStudent', $profile->token], 'files'=>'true', 'class'=>'', 'id'=>'myForm', 'data-toggle'=>'validator']); ?>
+
+                <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-1">
+                <div class="card p-5 mt-3">
+                       <?php if(empty($user->photo)): ?> 
+                        <label class="label block mb-2" for="photo">Choisir votre photo de profil</label>
+                        <label class="input-group font-normal">
+                            <input type="file" name="photo" class="form-control">
+                        </label>
+                        <small class="block mt-2 text-red-700">Vous n'avez pas une photo de profil.</small>
+                        <?php endif; ?>
+                        <hr class="border-dashed mb-4 mt-2">
+                        <!-- Publish -->
+                        <div class="flex flex-col gap-y-5">
+                            <div class="flex flex-wrap gap-2">
+                            <?php if(empty($user->photo)): ?>   
+                                <button class="btn btn_success"><span class="la la-plus"></span> Ajouter</button>
+                            <?php else: ?>
+                                <a onclick="return confirm('Vous voulez supprimer?')" href="<?php echo URL::route('delete_photo', $profile->token); ?>" class="badge badge_danger"><span class="la la-trash text-sm"></span>Supprimer votre photo de profil</a>
+                            <?php endif; ?>    
+                            </div>
+                        </div>
+                   </div> 
+                </div>
+               <?php echo Form::close(); ?>  
+            </div>
+            <div class="grid lg:grid-cols-4 gap-5">
+            <div class="lg:col-span-1 xl:col-span-3">
+            <div class="card p-5">
+            <?php echo Form::open(['route'=>['student_update_password', $profile->token], 'class'=>'', 'id'=>'myForm', 'data-toggle'=>'validator']); ?>
+
+                    
+                    <div class="mb-5 xl:w-1/1">
+                        <label class="label block mb-2" for="password"><?php echo Lang::get($path.'.old_password'); ?></label>
+                        <label class="form-control-addon-within">
+                            <input id="password" type="password" name="old_password" class="form-control border-none">
+                            <span class="flex items-center ltr:pr-4 rtl:pl-4">
+                            <button type="button" class="la la-eye text-gray-300 dark:text-gray-700 text-xl leading-none" data-toggle="password-visibility"></button>
+                            </span>
+                        </label>
+                        <div class="help-block with-errors"></div>
+                        <?php if($errors->first('password')): ?>
+                        <span class="text-red-700"><?php echo $errors->first('password'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mb-5 xl:w-1/1">
+                        <label class="label block mb-2" for="password">Nouveau mot de passe</label>
+                        <label class="form-control-addon-within">
+                            <input id="password" type="password" name="password" class="form-control border-none">
+                            <span class="flex items-center ltr:pr-4 rtl:pl-4">
+                            <button type="button" class="la la-eye text-gray-300 dark:text-gray-700 text-xl leading-none" data-toggle="password-visibility"></button>
+                            </span>
+                        </label>
+                        <div class="help-block with-errors"></div>
+                        <?php if($errors->first('password')): ?>
+                        <span class="text-red-700"><?php echo $errors->first('password'); ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mb-5 xl:w-1/1">
+                        <label class="label block mb-2" for="password_confirm">Confirmer nouveau mot de passe</label>
+                        <label class="form-control-addon-within">
+                            <input id="password_confirm" type="password" name="password_confirm" class="form-control border-none">
+                            <span class="flex items-center ltr:pr-4 rtl:pl-4">
+                            <button type="button" class="la la-eye text-gray-300 dark:text-gray-700 text-xl leading-none" data-toggle="password-visibility"></button>
+                            </span>
+                        </label>
+                        <div class="help-block with-errors"></div>
+                            <?php if($errors->first('password_confirm')): ?>
+                            <span class="text-red-700"><?php echo $errors->first('password_confirm'); ?></span>
+                            <?php endif; ?>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <button class="btn btn_success"><span class="la la-sync text-xl leading-none"></span> Mettre à jour</button>
+                    </div>
+            <?php echo Form::close(); ?>    
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+ <?php echo $__env->make('components.pages.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php $__env->startSection('js'); ?>
+        <script type="text/javascript">
+        function goToNext(c) {
+        if(c.value != '') {
+            window.location = '<?php echo URL::current(); ?>/'+c.value;
+        }
+        }
+        </script>
+        <?php $__env->stopSection(); ?>
+</main>
+<?php $__env->stopSection(); ?>       
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

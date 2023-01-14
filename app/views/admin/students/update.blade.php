@@ -54,6 +54,22 @@
                                 <span class="text-red-700">{{ $errors->first('phone') }}</span>
                                 @endif
                         </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="country">Pays</label>
+                            {{ Form::text('country', $user->country, ['id'=>'country', 'class'=>'form-control']) }}
+                            <div class="help-block with-errors"></div>
+                                @if($errors->first('country'))
+                                <span class="text-red-700">{{ $errors->first('country') }}</span>
+                                @endif
+                        </div>
+                        <div class="mb-5 flex-shrink px-4 w-full xl:w-1/2">
+                            <label class="label block mb-2" for="city">Ville</label>
+                            {{ Form::text('city', $user->city, ['id'=>'city', 'class'=>'form-control']) }}
+                            <div class="help-block with-errors"></div>
+                                @if($errors->first('city'))
+                                <span class="text-red-700">{{ $errors->first('city') }}</span>
+                                @endif
+                        </div>
 
                 </div>
             </div>

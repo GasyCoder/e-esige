@@ -19,7 +19,7 @@
 <?php endif; ?>
 
 <?php if(Session::has('warning')): ?>
-    <div class="alert alert_info">
+    <div class="alert alert_primary">
         <strong class="uppercase"><bdi>Info!</bdi></strong>
        <?php echo Session::get('warning'); ?>
 

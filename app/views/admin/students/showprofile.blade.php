@@ -2,6 +2,18 @@
 <?php $path = Session::get('language'); ?>
 @section('title') {{$title. ' - ' .$profile->fname. ' '.$profile->lname}} @stop
 @section('content')
+<style type="text/css">
+.profile_cover {
+  background-image: url('{{url()}}/uploads/profiles/students/{{$user->cover_picture}}');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
+}
+.picture_profile img{
+  opacity: 1;
+}
+</style>
 <!-- Workspace -->
     <main class="workspace">
         <!-- Breadcrumb -->
@@ -18,13 +30,20 @@
         <div class="grid lg:grid-cols-4 gap-5">
             <!-- Categories -->
             <div class="lg:col-span-2 xl:col-span-1">
-                     <div class="flex items-center justify-center gap-x-4 mt-4 dropzone">
-                        <div class="">
-                            @if(!empty($user->photo))
-                            <?php echo HTML::image('uploads/profiles/students/'.$user->photo.'', '', ['class'=>'avatar w-20 h-20', 'width'=>'180','height'=>'80']) 
-                            ?>
-                            @else 
-                             <div class="flex items-center gap-x-4 mt-4">
+                <div class="border">              
+                    @if(!empty($user->photo)) 
+                    <div class="flex items-center justify-center gap-x-0 cover_pic 
+                    profile_cover"> 
+                    </div>
+                    @endif
+                    <div class="flex items-center justify-center gap-x-0">
+                       @if(!empty($user->photo))
+                        <div class="avatar avatar_with-shadow w-20 h-20">
+                            <div class="status bg-success"></div>
+                            <img src="{{url()}}/uploads/profiles/students/{{$user->photo}}" class="picture_profile">
+                        </div>
+                        @else 
+                        <div class="flex items-center gap-x-4">
                                 <?php 
                                   $fname = substr($profile->fname,0,1);
                                   $lname = substr($profile->lname,0,1);
@@ -32,11 +51,11 @@
                                 <div class="avatar avatar_with-shadow w-20 h-20 text-4xl">{{ ($fname.''.$lname) }}
                                     <div class="status bg-success"></div>
                                 </div>
-                             </div>
-                            @endif
                         </div>
+                        @endif
                     </div>
-                <div class="card p-5 mt-3">
+                </div>  
+                <div class="info_pic p-5">
                     <h3>Informations</h3>
                     <div class="mt-5 leading-normal">
                         <a href="#no-link" class="flex items-center text-normal">
@@ -65,13 +84,22 @@
                             Vague : {{$profile->vague->abr}}
                         </a>
                         <hr class="my-2">
-                          <a href="#no-link" class="flex items-center text-normal">
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-globe-africa text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Pays : {{$user->country}}
+                            </a>
+                            <a href="#no-link" class="flex items-center text-normal">
+                                <span class="la la-city text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
+                                Ville : {{$user->city}}
+                            </a>
+                            <hr>
+                            <a href="#no-link" class="flex items-center text-normal">
                                 <span class="la la-envelope text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
                                 Email : {{$user->email}}
                             </a>
                             <a href="#no-link" class="flex items-center text-normal">
                                 <span class="la la-phone text-muted text-2xl ltr:mr-2 rtl:ml-2"></span>
-                                Tél : {{$profile->phone}}
+                                Tél : {{$user->phone}}
                             </a>
                             @if($user->fb !== NULL)
                             <a href="https://web.facebook.com/{{$user->fb}}" target="_blank" class="flex items-center text-normal">
@@ -86,33 +114,77 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FAQs -->
+            <!-- Payment -->
             <div class="flex flex-col gap-y-5 lg:col-span-2 xl:col-span-3">
                 @include('components.alerts')
+              @if(count($payers)> 0)  
                 <div class="card p-5">
                     <h3>Etat de paiement</h3>
-                   <table class="table table_bordered w-full">
+                   <table class="table table_bordered w-full mt-3">
                         <thead>
                             <tr>
                                 <th class="ltr:text-left rtl:text-right uppercase">Année</th>
-                                <th class="ltr:text-left rtl:text-right uppercase">Mois</th>
+                                <th class="text-center uppercase">Mois</th>
                                 <th class="ltr:text-left rtl:text-right uppercase">Objet</th>
-                                <th class="ltr:text-left rtl:text-right uppercase">Status</th>
+                                <th class="ltr:text-left rtl:text-right uppercase">Date/Heur</th>
+                                <th class="text-center uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody>
+                          @foreach($payers as $payer)      
                             <tr>
-                                <td>1</td>
-                                <td>John</td>
-                                <td>Doe</td>
-                                <td>@john</td>
+                                <td>{{$year->yearsUniv}}</td>
+                                <td class="text-center font-bold">{{$payer->nbremois}}</td>
+                                <td>{{$payer->motif}}</td>
+                                <td class="">{{$payer->created_at->format('d/m/y à H:i:s')}}</td>
+                                <td class="text-center">
+                                  @if($payer->status == 1)
+                                  <button class="badge badge_outlined badge_success">Payé</button>
+                                  @else
+                                  <button class="badge badge_outlined badge_danger">En attente</button>
+                                  @endif
+                                </td>
                             </tr>
+                         @endforeach   
                         </tbody>
                     </table>
                 </div>
-
-        <div class="grid lg:grid-cols-4 gap-5">
+                @else
+                @endif
+                @if(count($cours)> 0)
+                <!-- Activation Cours -->
+                <div class="card p-5">
+                <h3>Gérer les cours</h3>
+                <table class="table table_bordered w-full mt-3">
+                        <thead>
+                            <tr>
+                                <th class="ltr:text-left rtl:text-right uppercase">Matières</th>
+                                <th class="text-center uppercase">Fichier</th>
+                                <th class="text-center uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          @foreach($cours as $cour)    
+                            <tr>
+                                <td>{{$cour->matiere->name}}</td>
+                                <td class="text-center">
+                                   <a href="{{ url() }}/uploads/support_files/{{$cour->support->file}}" target="_blank" class="text-red-700"><i><span class="la la-paperclip "></span> document format pdf</i></a> 
+                                </td>
+                                <td class="text-center">
+                                 @if($cour->status == 1) 
+                                  <a href="#" class="badge badge_success">Actif</a>
+                                 @else
+                                 <a href="#" class="badge badge_danger">Inactif</a>
+                                 @endif
+                                </td>
+                            </tr>
+                         @endforeach   
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                @endif
+            <div class="grid lg:grid-cols-4 gap-5">
             <!-- Content -->
             <div class="lg:col-span-1 xl:col-span-3">
                 <div class="card p-5">

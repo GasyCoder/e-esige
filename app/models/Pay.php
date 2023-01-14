@@ -24,7 +24,7 @@ class Pay extends Eloquent {
 
 	public function student()
 	{
-		return $this->belongsTo('Student', 'id');
+		return $this->belongsTo('Student', 'id_student');
 	}
 
 

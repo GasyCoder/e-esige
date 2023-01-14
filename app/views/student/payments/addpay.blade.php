@@ -2,7 +2,7 @@
 <?php 
 $path = Session::get('language'); 
 $control = Control::find(1);
-$tarif = Tarif::where('class_id', $i->class_id)->first();
+$tarif = Tarif::where('class_id', $student->class_id)->first();
 ?>
 @section('title') {{$title}} @stop
 @section('content') 
@@ -11,7 +11,9 @@ $tarif = Tarif::where('class_id', $i->class_id)->first();
         <section class="breadcrumb">
             <h1>{{$title}}</h1>
             <ul>
-                <li><a href="#no-link">Liste des paiement</a></li>
+                <li><a href="{{URL::route('typepay', $motif->id)}}"><span class="la la-undo"></span> Retour</a></li>
+                 <li class="divider la la-arrow-right"></li>
+                <li><a href="{{URL::route('listes_stud')}}">Liste des paiement</a></li>
                 <li class="divider la la-arrow-right"></li>
                 <li>paiment</li>
             </ul>
@@ -22,110 +24,78 @@ $tarif = Tarif::where('class_id', $i->class_id)->first();
 @include('components.alerts')
 {{ Form::open(['route'=>['payStore', $type->token, Auth::user()->token], 'files'=>'true', 'id'=>'myForm', 'class'=>'', 'data-toggle'=>'validator'])  }} 
                     <div class="flex flex-wrap flex-row -mx-4 collapse open">
-                        
-                        <div class="mb-5 flex-shrink px-4 w-full">
-                        <label class="label block mb-2" for="title">Type de paiement</label>
-                            <input class="form-control font-bold text-green-700" type="text" name="type" value="{{$type->title}}" readonly>
+                        <div class="flex gap-2 p-5">
+                            <button class="badge badge_outlined badge_success">{{$type->title}}</button>
+                            <button class="divider la la-arrow-right"></button>
+                            <button class="badge badge_outlined badge_primary">{{$motif->title}}</button>
                         </div>
-                        <div class="mb-5 flex-shrink px-4 w-full">
-                                <label class="label block mb-2" for="motif">Motifs</label>
-                                <div class="custom-select">
-                                <select class="form-control font-bold" name="motif" id="motif" required>
-                                   <option value="" selected disabled>--Choisir motif de paiment--</option>
-                                   @foreach($motifs as $motif) 
-                                     <option value="{{$motif->title}}" class="font-bold">{{$motif->title}}</option>
-                                   @endforeach
-                                </select>
-                                    <div class="custom-select-icon la la-caret-down"></div>
-                                </div>
-                        </div>
-                      
-                        @if($i->controlpay->otherpayed != 0)
-                        <div class="w-full border border-dashed mb-5" style="display:none;" id="Ecolage">
-                              <div class="mb-5 flex-shrink px-4 w-full mt-4">
-                                    <label class="label block mb-2" for="title">Indiquez nombre de mois <span class="text-red-700">[Nbre mois initial = {{$i->mois_reste}}]</span> </label>
-                                    <input type="number" name="nbremois" class="form-control font-bold" id="nbremois" min="1" max="{{$i->mois_reste}}" placeholder="Indiquez le nombre de mois d'écolage que vous voulez payez">
-                              </div> 
-                              <div class="mb-5 flex-shrink px-4 w-full">
-                                <label class="label block mb-2" for="montant">Montant à payer en {{$control->payment_unit}}</label>
-                                <input type="text" name="montant" value="" id="result" class="form-control text-green-800 font-bold">
-                              </div>
-                        </div>
-                        @else
-                        <div class="w-full mb-5 p-5" style="display:none;" id="Ecolage">
-                             <div class="alert alert_warning text-gray-600">
-                                <strong class="uppercase"><bdi>Attention!</bdi></strong>
-                                Vous devez payer d'abord votre droit d'inscription.
-                                <button class="dismiss la la-times" data-dismiss="alert"></button>
-                            </div>
-                        </div>
-                        @endif 
-
-                       @if($i->controlpay->otherpayed == 0)
-                        <div class="w-full border border-dashed mb-5" style="display:none;" id="Droit">
-                            <div class="mb-5 flex-shrink px-4 w-full">
+                         <input type="hidden" name="type" value="{{$type->title}}">
+                            <input type="hidden" name="motif" value="{{$motif->title}}">
+                         <div class="w-full border border-dashed mb-5" style="display:block;" id="Ecolage">
+                          <div class="mb-5 flex-shrink px-4 w-full mt-4">
+                                <label class="label block mb-2" for="title">Indiquez nombre de mois <span class="text-red-700">[ Nbre mois reste = {{$student->verify->mois_reste}} ]</span> </label>
+                                <input type="number" name="nbremois" class="form-control font-bold" id="nbremois" min="1" max="{{$student->verify->mois_reste}}" placeholder="Indiquez le nombre de mois d'écolage que vous voulez payez" pattern="^[0-9]{4}$">
+                          </div> 
+                          <div class="mb-5 flex-shrink px-4 w-full">
                             <label class="label block mb-2" for="montant">Montant à payer en {{$control->payment_unit}}</label>
-                            <input type="text" value="{{$tarif->droit}}" name="montant" id="montant" class="form-control text-green-800 font-bold">
-                            </div>
+                            <input type="text" name="montant" value="" id="result" class="form-control text-green-800 font-bold">
+                          </div>
                         </div>
-                        @else
-                        <div class="p-5 w-full mb-5" style="display:none;" id="Droit">
-                            <div class="alert alert_info">
-                                <strong class="uppercase"><bdi>Info!</bdi></strong>
-                                Votre droit d'inscription a été payé! à la date du :
-                                <button class="dismiss la la-times" data-dismiss="alert"></button>
-                            </div>
-                        </div>
-                        @endif
-
-                       @if($type->same == 1)
+                       
                         <div class="w-full">
                            <div class="mb-5 flex-shrink px-4 w-full">
-                            <label class="label block mb-2" for="title">Numero de Réference</label>
+                            <label class="label block mb-2" for="payment_index">
+                            @if($type->same == 1)   
+                                Numero de Réference 
+                                <small>({{$type->title}})</small>
+                            @else
+                                Numero du bordereaux 
+                                <small>({{$type->title}})</small>
+                            @endif    
+                            </label>
                                 <input class="form-control font-bold" type="text" name="payment_index">
                             </div>
                        </div>
-                       @endif
-
                        @if($type->same == 2) 
                        <div class="w-full">
                            <div class="mb-5 flex-shrink px-4 w-full">
-                            <label class="label block mb-2" for="title">Numero du bordereaux</label>
-                                <input class="form-control font-bold" type="text" name="num_bordero">
-                            </div>
-                       </div>
-                       <div class="w-full">
-                           <div class="mb-5 flex-shrink px-4 w-full">
-                            <label class="label block mb-2" for="title">Nom de l'Agence</label>
+                            <label class="label block mb-2" for="agence">Nom de l'Agence</label>
                                 <input class="form-control font-bold" type="text" name="agence">
                             </div>
                        </div>
+                       @else
+                       <input type="hidden" name="agence" value="NULL">
                        @endif
 
                        <div class="w-full">
                            <div class="mb-5 flex-shrink px-4 w-full">
-                            <label class="label block mb-2" for="title">Date de paiement</label>
+                            <label class="label block mb-2" for="date">Date de paiement</label>
                                 <input class="form-control font-bold" type="date" name="date">
                             </div>
                        </div>
                        <div class="w-full">
-                           <div class="mb-5 flex-shrink px-4 w-full">
+                           <div class="mb-0 flex-shrink px-4 w-full">
                            <input type="checkbox" id="myCheck" onclick="myFunction()">
                             <span></span>
                                 <span>Ajouter pièce jointe?</span>
                            </div>
                         </div>
-                         <div class="w-full mb-3">
-                           <div class="mb-5 flex-shrink px-4 w-full">
+                        <div class="w-full mb-3">
+                           <div class="mt-5 mb-5 flex-shrink px-4 w-full">
                                 <input type="file" name="file" id="file" style="display:none" class="form-control">
                             </div>
-                       </div>
-                       
-                        <div class="w-full mb-5">
+                        </div>
+                        <div class="w-full mb-0">
+                           <div class="mb-5 flex-shrink px-4 w-full">
+                            <label class="label block mb-2" for="agence">Message <small>(facultatif)</small></label>
+                                <textarea class="form-control" name="msg" row="3" style="display:" placeholder="Saisir ici votre message : 100 caractères maximum"></textarea>
+                            </div>
+                        </div>
+                        <div class="w-full mb-3">
                                 <label class="mb-5 flex-shrink px-4 w-full">
-                                <input type="checkbox" name="status" id="status" value="1" required>
+                                <input type="checkbox" name="status" id="status" value="1" required checked>
                                 <span></span>
-                                <span>Acceptez les règles de notre paiement : <a href="#">Lire notre règles.</a></span>
+                                <span>Acceptez les règles de paiement : <a href="#">Lire notre règles.</a></span>
                                 </label>
                         </div>
  
@@ -165,7 +135,7 @@ $tarif = Tarif::where('class_id', $i->class_id)->first();
         }
   });
 </script>
-@if($i->controlpay->otherpayed != 0)
+
 <script type="text/javascript">
 const $inputs = $('input[type="number"]')
 $inputs.change(function() {
@@ -180,7 +150,7 @@ $inputs.change(function() {
 
 });
 </script>
-@endif
+
 
 <script>
 function myFunction() {
@@ -193,66 +163,39 @@ function myFunction() {
   }
 }
 </script>
-
 @endsection
 </main>
  <!-- Sidebar -->
     <aside class="sidebar">
-
         <!-- Toggler - Mobile -->
         <button class="sidebar-toggler la la-ellipsis-v" data-toggle="sidebar"></button>
-
         <div class="overflow-y-auto">
-
             <!-- Status -->
-            <h2 class="p-5">Status</h2>
+            <h2 class="p-5">Tarifs</h2>
             <hr>
             <div class="flex flex-col gap-y-5 p-5">
                 <a href="#no-link" class="flex items-center text-normal">
-                    <span class="la la-sync text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
-                    Pending Tasks
-                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">10</span>
+                    <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
+                    Droit d'inscription/an
+                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">{{$tarif->droit.' ' .$control->payment_unit}}</span>
                 </a>
                 <a href="#no-link" class="flex items-center text-normal">
                     <span class="la la-check-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
-                    Completed Tasks
-                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">20</span>
+                    Ecolage/mois
+                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">{{$tarif->ecolage.' ' .$control->payment_unit}}</span>
                 </a>
             </div>
-
-            <!-- Categories -->
-            <h2 class="p-5">Categories</h2>
-            <hr>
-            <div class="flex flex-col gap-y-5 p-5">
-                <label class="custom-checkbox">
-                    <input type="checkbox">
-                    <span></span>
-                    <span>Potato</span>
-                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">10</span>
-                </label>
-                <label class="custom-checkbox">
-                    <input type="checkbox">
-                    <span></span>
-                    <span>Tomato</span>
-                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">20</span>
-                </label>
-                <label class="custom-checkbox">
-                    <input type="checkbox">
-                    <span></span>
-                    <span>Onion</span>
-                    <span class="badge badge_outlined badge_primary ltr:mr-2 rtl:ml-2 ltr:ml-auto rtl:mr-auto">10</span>
-                </label>
-            </div>
-
-            <!-- Tags -->
-            <h2 class="p-5">Tags</h2>
-            <hr>
-            <div class="flex gap-2 p-5">
-                <button class="badge badge_outlined badge_primary">Potato</button>
-                <button class="badge badge_outlined badge_success">Tomato</button>
-                <button class="badge badge_outlined badge_warning">Onion</button>
+        </div>
+        @if($verify->droit == 1 && $verify->ecolage == 1)
+        <!-- note -->
+        <h2 class="p-5">Note</h2>
+        <hr>
+        <div class="flex gap-2 p-5">
+            <div class="alert alert_success">
+                <strong class="uppercase"><bdi>Info!</bdi></strong>
+                Droit d'inscription + écolage 1ère versement sont dejà reglé!
             </div>
         </div>
+        @endif
     </aside>
-
 @stop

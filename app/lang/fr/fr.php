@@ -135,9 +135,9 @@ return [
     'connexion' => 'Connexion',
     'remember_me' => 'Se souvenir de moi',
     'reset' => 'Réinitialiser votre mot de passe',
-    'no_user_with_this_email' => "Aucun utilisateur n'a été trouvé avec cette adresse e-mail.",
-    'reset_code_send' => "Adresse Email ont été envoyés avec des détails sur la façon de réinitialiser votre mot de passe.",
-    'reset_code_error' => 'Code de réinitialisation incorrect',
+    'no_user_with_this_email' => "Il n'y a pas de compte utilisateur associé à cette adresse e-mail.",
+    'reset_code_send' => "Les instructions pour réinitialiser votre mot de passe ont été envoyées à votre adresse email.",
+    'reset_code_error' => 'Code de réinitialisation incorrecte',
     'reset_success' => 'Votre mot de passe a été réinitialisé !',
 
     'payments' => 'Paiements',
